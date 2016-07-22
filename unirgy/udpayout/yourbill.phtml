@@ -1,0 +1,88 @@
+<?php
+$_session = Mage::getSingleton('udropship/session');
+$_vendor = $_session->getVendor();
+$payoutColl = Mage::getModel("udpayout/payout")->getCollection()
+										->addFieldToFilter("vendor_id", $_vendor->getId());
+?>
+<div class="vendor_panel your_bill">
+	<h2><?php echo $this->__("Your Bill"); ?></h2>
+    <div class="top-block">
+    	<div class="left-block">
+        	<?php
+			//$udpoCollection = Mage::getModel("udpo/po")->getCollection();
+			?>
+        </div>
+        <div class="right-block">
+        	<?php
+			$schedulePayout = Mage::getModel("udpayout/payout")->getCollection()
+												->addFieldToFilter("vendor_id", $_vendor->getId())
+												->addFieldToFilter("scheduled_at", array('notnull' => true))
+												->addFieldToFilter("total_due", array('gt' => 0));
+			$total_due = 0;
+			if($schedulePayout->count()){
+				foreach($schedulePayout as $data_s){
+					$total_due += $data_s->getTotalDue();
+				}
+				$scheduledAt= new Zend_Date(strtotime($data_s->getScheduledAt()));
+				
+				echo "<div class='balance'><span>".Mage::helper('core')->currency($total_due)."</span>".$this->__('Balance')."</div>";
+				echo "<p>".$this->__('Your next scheduled payment is %s', $scheduledAt->toString('MMM dd, yyyy'))."</p>";
+			}else{
+				echo "<div class='balance'><span>".Mage::helper('core')->currency($total_due)."</span>".$this->__('Balance')."</div>";
+				echo "<p>".$this->__('No next scheduled Payment')."</p>";
+			}
+			?>
+        </div>
+    </div>
+    <div class="bottom-block">
+    <?php if($payoutColl->count()): ?>
+    	<table cellpadding="0" cellspacing="0" class="data-table finance-bill">
+             <thead>
+                <tr>
+                    <th><?php echo $this->__('Id'); ?></th>
+                    <th><?php echo $this->__('Statement ID'); ?></th>
+                    <th><?php echo $this->__('Payout Method'); ?></th>
+                    <th><?php echo $this->__('Payout Status'); ?></th>
+                    <th><?php echo $this->__('Transaction ID'); ?></th>
+                    <th><?php echo $this->__('Total Orders'); ?></th>
+                    <th><?php echo $this->__('Total Payout'); ?></th>
+                    <th><?php echo $this->__('Total Due'); ?></th>
+                    <th><?php echo $this->__('Payout Period'); ?></th>
+                    <th><?php echo $this->__('Created At'); ?></th>
+                </tr>
+             </thead>
+             <tbody>
+             <?php foreach($payoutColl as $_payout): ?>
+             	<tr>
+                	<td><?php echo $_payout->getId(); ?></td>
+                    <td><?php echo $_payout->getStatementId(); ?></td>
+                    <td><?php echo $_payout->getPayoutMethod(); ?></td>
+                    <td><?php echo $_payout->getPayoutStatus(); ?></td>
+                    <td><?php echo $_payout->getTransactionId(); ?></td>
+                    <td><?php echo $_payout->getTotalOrders(); ?></td>
+                    <td><?php echo Mage::helper('core')->currency($_payout->getTotalPayout()); ?></td>
+                    <td><?php echo Mage::helper('core')->currency($_payout->getTotalDue()); ?></td>
+                    <td>
+						<?php 
+						$createdAt= new Zend_Date(strtotime($_payout->getCreatedAt()));
+						echo $createdAt->toString('MMM dd, yyyy');
+						?>
+                    </td>
+                    <td>
+						<?php 
+						$dateFrom= new Zend_Date(strtotime($_payout->getDateFrom()));
+						echo $dateFrom->toString('MMM dd, yyyy'). " To ";
+						
+						$dateTo= new Zend_Date(strtotime($_payout->getDateTo()));
+						echo $dateTo->toString('MMM dd, yyyy');
+						?>
+                    </td>
+                </tr>
+             <?php endforeach; ?>
+             </tbody>
+        </table>
+    <?php else: ?>
+    	<p><?php echo $this->__("No Payout has been generated!");?></p>
+    <?php endif; ?>
+    </div>
+</div>
