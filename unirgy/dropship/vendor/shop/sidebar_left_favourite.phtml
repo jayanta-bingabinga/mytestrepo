@@ -1,0 +1,48 @@
+<?php 
+$_session = Mage::getSingleton('udropship/session');
+
+  $collection = Mage::getModel('catalog/product')->getCollection();
+  
+  $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+  $namevendor = $vendor_data->getVendorName();
+     $namevendorshop = $vendor_data->getvendor_shop_field();          
+// echo $namevendor; endicia_requester_id
+ $address_vendor =  $vendor_data->getBillingAddress();
+ 
+$Attention= $vendor_data->getvendor_attn();
+ 
+  $logo= $vendor_data->getlogo();
+  $vendor_shop_images_field= $vendor_data->getvendor_shop_images_field();
+  $created_at = date("M,Y", Mage::getModel("core/date")->timestamp($vendor_data->getCreatedAt()));
+ ?> 
+ 
+<aside class="sidebar_box_data">
+    <div class="sidebar_box_data_inner">
+        <div class="profile_img_box_sidebar">
+            <img src="<?php echo Mage::getBaseUrl('media').$logo ?>" alt="profile" />
+        </div>
+        
+        <div class="user_name_data"><a href="javascript:;"><?php echo $namevendor ?></a></div>
+        
+        <ul class="sidebar_link_pages">
+            <li><a href="">Profile</a></li>
+            <li class="current_sidebar_link"><a href="">Favorites: 1</a></li>
+            <li><a href="">Contact</a></li>
+        </ul>
+      </div>  
+      
+      
+      <div class="sidebar_box_data_inner shop_detail_box_sidebar">
+        <h5 class="b" style="margin: 0px 0px 10px;">Shop</h5>
+        <div class="shop_logo relative">
+            <img src="<?php echo Mage::getBaseUrl('media').$vendor_shop_images_field ?>" alt="profile" />
+            <a href="javascript:;" class="icon_img_upload_camera_icon" title="Change logo"><span class="glyphicon glyphicon-camera" aria-hidden="true"></span></a>
+        </div>
+        <div class="shop_text m_b5"><span class="badge">$</span> <a href="" class="name_link_shop"><?=$namevendorshop;?></a></div>
+        <p class="color_666">Opend on <?php echo $created_at; ?></p>
+         
+      </div>  
+      
+      
+</aside>

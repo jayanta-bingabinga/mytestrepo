@@ -1,0 +1,85 @@
+<?php
+$isCfg = $this->getElement()->getId() == 'configurable';
+$elements = $this->getElement()->getElements()->getIterator();
+$topElements = $this->getElement()->getTopColumn();
+$bottomElements = $this->getElement()->getBottomColumn();
+$lcElements = $this->getElement()->getLeftColumn();
+$rcElements = $this->getElement()->getRightColumn();
+?>
+<div class="listing-panel">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4 class="b"><?php echo $this->getElement()->getLegend() ?></h4>
+<?php if($this->getElement()->getLegend()=='Listing Details') {?>
+<p>Tell the world all about your item and why they'll love it.</p>
+<?php } ?>
+<?php if($this->getElement()->getLegend()=='Variations') {?>
+<p>Add available options, such as color or size. If you add variations, buyers must select them before adding your items to their cart. How do variations work?</p>
+<?php } ?>
+<?php if($this->getElement()->getLegend()=='Shipping') {?>
+<p>Set clear and realistic shipping expectations for shoppers by providing accurate processing time and shipping rates.</p>
+<?php } ?>
+<?php if($this->getElement()->getLegend()=='User Manual') {?>
+<p>Upload user manual, facilitate users to understand the product information at any time</p>
+<?php } ?>
+<?php if($this->getElement()->getLegend()=='Search Terms') {?>
+<p>Help more people discover your listing by using accurate and descriptive words phrases.</p>
+<?php } ?>
+<?php if($this->getElement()->getLegend()=='Images') {?>
+<p>Add at lest one photo. Use all five photos to show diffrent angles and details.
+Use high-quality JPG,PNG or GIF files that are at least 570px wide (we recommend 1000px). The best photos use 
+
+natural or diffused lighting, and don't use a flash. These are thumbnails of your photos. Zoom in to see them full-size.</p>
+<?php } ?>
+</div>
+ <div class="panel-body">  
+  
+<?php if (!empty($topElements)): ?> 
+<div style="float: left;width: 100%;">
+<?php foreach($topElements as $wideElement): ?>
+<div class="row" id="<?php echo $wideElement.'-container'?>" class="wide" <?php if ($this->isHidden($wideElement)) echo 'style="display: none;"' ?>>
+<?php echo $this->getChildElementHtml($wideElement); ?>
+</div>
+<?php endforeach ?>
+ 
+ </div>
+<?php endif ?>
+
+
+<?php if (!empty($lcElements)): ?>
+<div style="float: left;width: 100%;"> 
+<?php foreach($lcElements as $lcElement): ?>
+<div class="row" id="<?php echo $lcElement.'-container'?>">
+<?php echo $this->getChildElementHtml($lcElement); ?>
+</div>
+<?php endforeach ?>
+
+</div>
+<?php endif ?>
+
+
+<?php if (!empty($rcElements)): ?>
+<div style="float: left;width: 100%;"> 
+<?php foreach($rcElements as $rcElement): ?>
+<div id="<?php echo $rcElement.'-container'?>"><?php echo $this->getChildElementHtml($rcElement); ?></div>
+<?php endforeach ?>
+
+</div>
+<?php endif ?>
+
+
+<?php if (!empty($bottomElements)): ?>
+<div style="float: left;width: 100%;">
+<?php foreach($bottomElements as $wideElement): ?>
+<div class="row" id="<?php echo $wideElement.'-container'?>" class="wide" <?php if ($this->isHidden($wideElement)) echo 'style="display: none;"' ?>>
+<?php echo $this->getChildElementHtml($wideElement); ?>
+</div>
+<?php endforeach ?>
+
+</div>
+<?php endif ?>
+
+ <div class="clearfix   "></div>
+</div>
+</div>
+</div>

@@ -1,0 +1,307 @@
+<?php
+/**
+ * Unirgy LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.unirgy.com/LICENSE-M1.txt
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Dropship
+ * @copyright  Copyright (c) 2008-2009 Unirgy LLC (http://www.unirgy.com)
+ * @license    http:///www.unirgy.com/LICENSE-M1.txt
+ */
+?>
+<?php //$_menu = $this->getHtml('level-top')?>
+<?php $themeHelper = $this->helper('themeadmin'); ?>
+<?php
+$_session = Mage::getSingleton('udropship/session');
+$_isUdpo = Mage::helper('udropship')->isUdpoActive();
+$_isUdreport = Mage::helper('udropship')->isModuleActive('Unirgy_DropshipVendorReport');
+$_dashboardUrl = $_isUdpo ? $this->getUrl('udpo/vendor') : $this->getUrl('udropship/vendor');
+$_active = $this->getActivePage();
+$_isUrmaActive = Mage::helper('udropship')->isModuleActive('Unirgy_Rma')
+    && $_session->isLoggedIn();
+$_isUstockPoActive = Mage::helper('udropship')->isModuleActive('ustockpo')
+     && $_session->isLoggedIn() && $_session->getVendor()->getDistributorId();
+$_isTierShip = $_session->getVendor()->getAllowTiershipModify();
+ $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+  
+  $namevendor = $vendor_data->getVendorName();
+     $namevendorshop = $vendor_data->getvendor_shop_field();          
+// echo $namevendor; endicia_requester_id
+ $address_vendor =  $vendor_data->getBillingAddress();
+ 
+$Attention= $vendor_data->getvendor_attn();
+ 
+  $logo= $vendor_data->getlogo();
+  
+  $vendor_shop_images_field= $vendor_data->getvendor_shop_images_field();
+  $Announcement=$vendor_data->getAnnouncement();
+  
+   
+   
+ $media = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+  
+?>
+  
+ 
+ <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <header class="header">
+    
+        <div id="top-header">
+                <div class="container">
+                           <div class="row">
+                            <div class="col-md-2 col-sm-3 col-xs-4"  id="header-logo"><a href="<?php echo $this->getUrl('') ?>"><img src="<?php echo ('http://bingabinga.net/media/wysiwyg/magentiamo/default/LOGO.png'); ?>" class="img-responsive" /><?php echo $this->getLogoAlt() ?></a></div>                            
+                            <div class="col-md-4 col-xs-12 col-sm-12">
+                             
+                                <form action="" id="search_header">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" />
+                                         <span class="input-group-btn"><button type="submit" class="btn search-btn"><i class="glyphicon glyphicon-search"></i></button></span>
+                                    </div>
+                                </form>
+                            
+                            </div> <!--end search -->
+                                
+                                <div class="col-md-6 col-xs-12">
+                                
+                                        
+                                   
+                                        <?php if ($_session->isLoggedIn()): ?>
+                                                <ul class="links after_login_top_link">
+                                               <li><a href="<?php echo $this->getUrl() ?>" > <img src="<?php echo $media . 'icon/dark_home_icon.png' ?>" class="header_top_link_icon" /> <span><?php echo Mage::helper('udropship')->__('Home')?></span></a></li>                                                                                              
+                                                <li><a href="<?php echo $this->getUrl('udropship/vendor/favorites-items')?>"> <img src="<?php echo $media . 'icon/dark_favorite_icon.png' ?>" class="header_top_link_icon" /> <span><?php echo Mage::helper('udropship')->__('Favourite')?> </span></a></li>
+                                                <li class="sub_drop">
+                                                        <a href="<?php echo $this->getUrl('udropship/vendor/shop')?>"><img src="<?php echo $media . 'icon/dark_shop_icon.png' ?>" class="header_top_link_icon" /> <span><?php echo Mage::helper('udropship')->__('Your Shop')?></span></a>
+                                                        <span class="sub_drop_arrow_box"></span>
+                                                        <div class="sub_drop_box_layout">
+                                                                <div class="header_sub_drop_box">
+                                                                        <div class="media">
+                                                                                <div class="media-left">
+                                                                                        <a class="thumbnail menu_shop_logo_box" href="<?php echo $this->getUrl('udropship/vendor/shop')?>"><img src="<?php echo Mage::getBaseUrl('media').$vendor_shop_images_field ?>" alt="shop-img" /></a>
+                                                                                </div>
+                                                                                <div class="media-body">
+                                                                                        <h4 class="b shop_name"><?=$namevendorshop;?></h4>
+                                                                                        <div class="clearfix"></div>
+                                                                                        <a href="<?php echo $this->getUrl('udropship/vendor/shop')?>" class="btn_shop_menu custom_default_btn m_right15">View shop</a>
+                                                                                        <a href="<?php echo $this->getUrl('udropship/vendor/editshop')?>" class="btn_shop_menu dark_gray_btn">Edit shop</a>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                               <ul class="sub_drop_box left_drop_box">
+                                                                    <li class="sub_drop_li active_drop"><a href="">Quick links <i class="fa fa-chevron-right pull-right"></i></a>
+                                                                            <ul class="sub_drop_box">
+                                                                                <li><a href="">Info and appearance</a></li>
+                                                                                <li><a href="">About your shop</a></li>
+                                                                            </ul>
+                                                                    </li>
+                                                                    <li class="sub_drop_li"><a href="">Listings <i class="fa fa-chevron-right pull-right"></i></a>
+                                                                            <ul class="sub_drop_box">
+                                                                                <li><a href="">Link-1</a></li>
+                                                                                <li><a href="">Link -2</a></li>
+                                                                            </ul>
+                                                                    </li>
+                                                                    <li class="sub_drop_li"><a href="">Orders <i class="fa fa-chevron-right pull-right"></i></a>
+                                                                            <ul class="sub_drop_box">
+                                                                                <li><a href="">Open</a></li>
+                                                                                <li><a href="">Closed</a></li>
+                                                                                <li><a href="">Return</a></li>
+                                                                            </ul>
+                                                                    </li>
+                                                                    <li class="sub_drop_li"><a href="">Promote <i class="fa fa-chevron-right pull-right"></i></a>
+                                                                            <ul class="sub_drop_box">
+                                                                                <li><a href="">Link-c</a></li>
+                                                                                <li><a href="">Link -b</a></li>
+                                                                            </ul>
+                                                                    
+                                                                    </li>
+                                                                    <li class="sub_drop_li"><a href="">Finances <i class="fa fa-chevron-right pull-right"></i></a>
+                                                                            <ul class="sub_drop_box">
+                                                                                <li><a href="">Link-11</a></li>
+                                                                                <li><a href="">Link -12</a></li>
+                                                                            </ul>
+                                                                    </li>
+                                                                    <li class="sub_drop_li"><a href="<?php echo $this->getUrl('udropship/vendor/preferences')?>">Shop setting <!--<i class="fa fa-chevron-right pull-right"></i>--></a>
+                                                                           <!-- <ul class="sub_drop_box">
+                                                                                <li><a href="">Link-10</a></li>
+                                                                                <li><a href="">Link -20</a></li>
+                                                                            </ul>-->
+                                                                    </li>
+                                                                    <li class="sub_drop_li"><a href="">Educationg and support <i class="fa fa-chevron-right pull-right"></i></a>
+                                                                            <ul class="sub_drop_box">
+                                                                                <li><a href="">Link-a</a></li>
+                                                                                <li><a href="">Link -b</a></li>
+                                                                            </ul>
+                                                                    </li>
+                                                                   
+                                                            </ul>
+                                                        </div>
+                                                </li>
+                                                <li class="no_link_border"><a href="<?php echo $this->getUrl('udropship/vendor/preferences')?>"> <img src="<?php echo $media . 'icon/dark_you_icon.png' ?>" class="header_top_link_icon" /> <span><?php echo Mage::helper('udropship')->__('You')?> </span></a></li>
+                                                <li><a href="<?php echo $this->getUrl('udropship/vendor/preferences')?>"> <img src="<?php echo $media . 'icon/dark_cart_icon.png' ?>" class="header_top_link_icon" /> <span><?php echo Mage::helper('udropship')->__('Cart')?> </span></a></li>
+                                               
+                                                
+                                                        <!--
+         <li><a href="http://unirgy.com/products/udropship/help.php" onclick="this.target='_blank'"><?php // echo Mage::helper('udropship')->__('Help')?></a></li>
+        -->
+                                                    
+                                                <!--    <li><a href="<?php echo $this->getUrl('udropship/vendor/logout')?>"><?php echo Mage::helper('udropship')->__('Log out')?></a></li>-->
+                                                </ul>
+                                        
+                                        
+                                       <!-- <div class="user_name_login"><?php echo $this->htmlEscape(Mage::helper('udropship')->__('Welcome %s', $_session->getVendor()->getVendorName())) ?></div>-->
+                                        
+                                        <?php else: ?>
+                                        <?php // echo Mage::helper('udropship')->__('Welcome to Dropship Vendor Interface') ?>
+                                             <ul class="links before_login_link">
+                                                <li><a href="<?php echo $this->getUrl('umicrosite/vendor/register')?>"><?php echo Mage::helper('udropship')->__('Register')?></a></li>
+                                                <li><a href="<?php echo $this->getUrl('udropship/vendor/login')?>"><?php echo Mage::helper('udropship')->__('Log in')?></a></li>
+                                            </ul>
+                                            
+                                        <?php unset($_SESSION['check_val']); endif ?>
+                                     
+                                
+                                </div><!--end link -->
+                            
+                            
+                        </div>  
+                
+                </div>
+        </div><!--end top-header -->
+        
+
+    <div class="clearfix"></div>
+ <nav id="nav-head" class="navbar navbar-default ">
+        <div class="container"> 
+            <div class="row">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="menu-text">Menu</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                </div>
+            
+                    <div id="navbar" class="navbar-collapse collapse"> 
+                        <ul class="nav navbar-nav">
+                            <li class="first <?php if ($_active=='dashboard'): ?>active<?php endif ?>"><a href="<?php echo $_dashboardUrl?>"><?php echo Mage::helper('udropship')->__('Orders')?></a></li>
+                    <?php if ($_isUrmaActive): ?>
+                        <li <?php if ($_active=='urmas'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('urma/vendor/') ?>"><?php echo Mage::helper('udropship')->__('Returns')?></a></li>
+                    <?php endif ?>
+                    <?php if ($_isUstockPoActive): ?>
+                            <li <?php if ($_active=='ustockpos'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('ustockpo/vendor/') ?>"><?php echo Mage::helper('udropship')->__('Stock POs')?></a></li>
+                    <?php endif ?>
+                    <?php if ($_isUstockPoActive): ?>
+                            <li <?php if ($_active=='pending_ustockpo'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('ustockpo/vendor/pendingUstockpo') ?>"><?php echo Mage::helper('udropship')->__('Pending Stock PO')?></a></li>
+                    <?php endif ?>
+                    <?php if ($_isTierShip): ?>
+                        <li <?php if ($_active=='tiership_rates'): ?>class="active"<?php endif ?>><a href="<?php echo Mage::helper('udtiership')->getVendorEditUrl()?>"><?php echo Mage::helper('udropship')->__('Shipping Rates')?></a></li>
+                    <?php endif ?>
+                    <?php if (0&&Mage::helper('udropship')->isModuleActive('udtiercom')): ?>
+                        <li <?php if ($_active=='tiercom_rates'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udtiercom/vendor/rates')?>"><?php echo Mage::helper('udropship')->__('Commission Percents')?></a></li>
+                    <?php endif ?>
+                    <?php if (false && $_session->getVendor()->getLabelType()): ?>
+                            <li <?php if ($_active=='batches'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udropship/vendor/batches')?>"><?php echo Mage::helper('udropship')->__('Label Batches')?></a></li>
+                    <?php endif ?>
+                            <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipBatch')): ?>
+                            <li <?php if ($_active=='importstock'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udbatch/vendor_batch/importStock') ?>" ><?php echo Mage::helper('udropship')->__('Import Stock')?></a></li>
+                            <li <?php if ($_active=='importorders'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udbatch/vendor_batch/importOrders') ?>" ><?php echo Mage::helper('udropship')->__('Import Tracking')?></a></li>
+                            <?php endif ?>
+                    <?php if (Mage::helper('udropship')->isModuleActive('modules/Unirgy_DropshipMulti')): ?>
+                            <li <?php if ($_active=='stockprice'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udmulti/vendor_product')?>"><?php echo Mage::helper('udropship')->__('Stock And Price')?></a></li>
+                    <?php else: ?>
+                            <li <?php if ($_active=='stockprice'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udropship/vendor/product')?>"><?php echo Mage::helper('udropship')->__('Stock')?></a></li>
+                    <?php endif ?>
+                    <?php if (Mage::helper('udropship')->isModuleActive('udprod')
+                        && $_session->isLoggedIn()): ?>
+                            <li <?php if ($_active=='udprod'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udprod/vendor/products')?>"><?php echo Mage::helper('udropship')->__('Product Manager')?></a></li>
+                    <?php endif ?>
+                    <?php if (Mage::helper('udropship')->isModuleActive('udsell')): ?>
+                        <li <?php if ($_active=='udsell'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udsell/index/sellSearch')?>"><?php echo Mage::helper('udropship')->__('Select &amp; Sell')?></a></li>
+                    <?php endif ?>
+                    <?php if ($_isUdreport): ?>
+                        <li <?php if ($_active=='udrshipment'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udreport/vendor/shipment')?>"><?php echo Mage::helper('udropship')->__('Shipments Report')?></a></li>
+                        <?php if ($_isUdpo): ?>
+                        <li <?php if ($_active=='udrudpo'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udreport/vendor/udpo')?>"><?php echo Mage::helper('udropship')->__('Advanced PO Report')?></a></li>
+                        <?php endif ?>
+                    <?php endif ?>
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipManualLabel')
+                        && $_session->isLoggedIn()): ?>
+                        <li <?php if ($_active=='umanlabels'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('umanlabel/vendor')?>"><?php echo Mage::helper('udropship')->__('Manual Labels')?></a></li>
+                    <?php endif ?>
+                    <?php if (Mage::helper('udropship')->isModuleActive('udqa')
+                    && $_session->isLoggedIn()): ?>
+                    <li <?php if ($_active=='udqa'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udqa/vendor/questions')?>"><?php echo Mage::helper('udropship')->__('Customer Questions')?></a></li>
+                    <?php endif ?>
+                    <?php if (Mage::helper('udropship')->isModuleActive('udpromo')
+                    && $_session->isLoggedIn()): ?>
+                    <li <?php if ($_active=='udpromo'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udpromo/vendor/rules')?>"><?php echo Mage::helper('udropship')->__('Promotions')?></a></li>
+                    <?php endif ?>
+                    <li <?php if ($_active=='preferences'): ?>class="active"<?php endif ?>><a href="<?php echo $this->getUrl('udropship/vendor/preferences')?>"><?php echo Mage::helper('udropship')->__('Settings')?></a></li>
+                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipMicrosite')
+                        && $_session->isLoggedIn()
+                        && $_session->getVendor()->getShowProductsMenuItem()): ?>
+                            <li><a href="<?php echo Mage::helper('umicrosite')->getManageProductsUrl() ?>" onclick="this.target='VendorAdmin'"><?php echo Mage::helper('udropship')->__('System View')?></a></li>
+                    <?php endif ?>
+                        </ul>
+                </div>
+            </div>
+    </nav> 
+    
+    
+    <nav id="nav-head" class="navbar navbar-default <?php if($themeHelper->getCfg('header/header_layout/head6')==1)echo 'container';?>">
+          <div class="container"> 
+          <div class="row">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header col-xs-12 full-width">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="menu-text">Menu</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+            </div>
+            
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse fill-width col-xs-12" id="bs-example-navbar-collapse-1">
+              <?php $_helper = Mage::helper('catalog/category') ?>
+    <?php $_categories = $_helper->getStoreCategories() ?>
+    <?php $currentCategory = Mage::registry('current_category') ?>
+    <?php if (count($_categories) > 0): ?>
+            <ul class="nav navbar-nav"> 
+            <?php foreach($_categories as $_category): ?>
+                     <?php $_category = Mage::getModel('catalog/category')->load($_category->getId()) ?>
+                    <?php $_subcategories = $_category->getChildrenCategories() ?>
+                    <li <?php if (count($_subcategories) > 0): ?> class="dropdown" <?php endif; ?>>
+                         <a href="<?php echo $_helper->getCategoryUrl($_category) ?>"><?php echo $_category->getName() ?> <?php if (count($_subcategories) > 0): ?><i class="fa fa-chevron-down pull-right"></i><?php endif; ?></a>
+                   
+                    <?php if (count($_subcategories) > 0): ?>
+                        <ul  class="dropdown-menu">
+                        <li><a href="<?php echo $_helper->getCategoryUrl($_category) ?>"><?php echo 'View All '. $_category->getName() ?></a></li>
+                         <?php foreach($_subcategories as $_subcategory): ?>
+                          <?php $_subcategory = Mage::getModel('catalog/category')->load($_subcategory->getId()) ?>
+                                <?php $_subsubcategories = $_subcategory->getChildrenCategories() ?>
+                            <li <?php if (count($_subsubcategories) > 0): ?> class="dropdown-submenu"<?php endif; ?>>
+                                <a href="<?php echo $_helper->getCategoryUrl($_subcategory) ?>"><?php echo $_subcategory->getName() ?> <?php if (count($_subsubcategories) > 0): ?><i class="fa fa-chevron-right pull-right"></i><?php endif; ?></a><!--sub sub category-->                               
+                                <?php if (count($_subsubcategories) > 0): ?>
+                                 <ul class="dropdown-menu">
+                                 <li><a href="<?php echo $_helper->getCategoryUrl($_subcategory) ?>"><?php echo 'View All '. $_subcategory->getName() ?></a></li>
+                                 <?php foreach($_subsubcategories as $_subsubcategory): ?>
+                                 <li><a href="<?php echo $_helper->getCategoryUrl($_subsubcategory) ?>"><?php echo $_subsubcategory->getName() ?></a></li>
+                          <?php endforeach; ?>
+                        </ul>
+                     <?php endif; ?>
+                                 <!--sub sub category-->
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                    </li>
+             <?php endforeach; ?>
+            </ul>
+    <?php endif; ?>
+             </div>
+             </div>
+          </div>
+        </nav>
+
+</header>
+  
+  

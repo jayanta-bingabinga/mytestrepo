@@ -1,0 +1,570 @@
+ <?php 
+  $vendor_data = Mage::helper('umicrosite')->getCurrentVendor();
+ // print_r($vendor_data); 
+ $vendor_id=$vendor_data->getvendor_id();
+?>
+  <?php 
+                  
+    
+    $item_qty=0;
+      $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id);
+     // print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){ 
+    
+      
+$attr = $_product->getResource()->getAttribute("color");
+
+    
+    
+     $color_label = $attr->getSource()->getOptionText($_product->getColor());
+
+
+        
+        
+     
+     $item_qty++;
+      
+    } endforeach ?>
+   
+  
+
+   <aside class="col-md-3 col-sm-3 colxs-12 shop_product_side_filter">
+   
+   
+    <ul class="shop_filter_box">
+       
+         <?php 
+    
+    $item_qty_total=0;
+      $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product1=Mage::getModel('catalog/product')->load($_id);
+     $_product=$_product1; // will bring back the first 20 products
+       
+        // print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){ 
+     
+     $item_qty_total++;
+      
+       }endforeach;
+     ?>
+        <li class="current_filter_item"><a href="">All Items <span class="number_item" id="quty_total_product"><?=$item_qty_total?></span></a></li>
+        
+        
+    <?php 
+                  
+    
+    $item_weight=0;
+      $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product1=Mage::getModel('catalog/product')->load($_id);
+     $_product=$_product1; // will bring back the first 20 products
+       
+         //print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){
+     if($_product->getweight()){
+     $item_weight++;
+      
+      }} endforeach;
+     ?>
+        
+        <li><a href="?weight=_?">weight <span id="weight_product" class="number_item"><?=$item_weight?></span></a></li>
+       <?php
+       
+        $item_color=0;
+          $collection = Mage::getModel('catalog/product')->getCollection();
+        
+        
+        
+         foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+        $_product=Mage::getModel('catalog/product')->load($_id);
+         // print_r($_product);
+        $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+        if($vendor_id12==$vendor_id){ 
+        
+         if($_product->getColor()){
+        
+        
+        
+$attr = $_product->getResource()->getAttribute("color");
+if ($attr->usesSource()) {
+    
+    
+   // echo $color_label = $attr->getSource()->getOptionText($_product->getColor());
+
+
+            
+            
+         
+         $item_color++;
+         // Put The color Link
+         //href="?Color=<?=$_product->getColor();
+        
+              
+        }} } endforeach ;   
+       
+       
+       ?>
+        
+        <li>
+                <a href="javascript:;">Color<span id=""class="number_item"><?=$item_color?></span></a>
+                 <div class="color_filter_shop_product_box">
+                 <?php 
+                      
+        
+                    $item_qty=0;
+                      $collection = Mage::getModel('catalog/product')->getCollection();
+                    
+                    
+                    $seasons = array();
+                     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+                    $_product=Mage::getModel('catalog/product')->load($_id);
+                     // print_r($_product);
+                    $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+                    if($vendor_id12==$vendor_id){ 
+                    
+                      
+                    $attr = $_product->getResource()->getAttribute("color");
+                    
+                    
+                      $pieces = explode(",", $_product->getColor());
+                     $pieces[0]; // piece1
+
+                    
+                     $color_label = $attr->getSource()->getOptionText($pieces[0]);
+                    
+                        if($color_label)
+                        { $seasons[] =$color_label.",".$pieces[0];
+                        $pieces_val[] =$pieces[0];
+                        
+                         $item_qty++;
+                          
+                          }
+                    
+                    }
+                     endforeach;  
+                      $seasons = array_unique($seasons);
+                     
+                     
+                    foreach($seasons as $season){
+                        $pieces = explode(",", $season);
+
+                        
+                        ?>
+                     <a href="?Color=<?=$pieces[1]?>" class="filter_color_choose_box " title="<?=$pieces[0]?>" style="background-color:<?=$pieces[0]?>;border-color:<?=$pieces[0]?>"><?=$pieces[0]?></a><?php      
+                      }
+                     ?>
+                 </div>   
+                 
+        </li>
+        
+       
+        
+        <li>
+                <?php 
+                    $max = Mage::getModel('catalog/layer_filter_price');$max_price = $max->getMaxPriceInt()+1; 
+                     $frist_price=$_REQUEST['Price']; 
+                    $second_price=$_REQUEST['b'];
+                    if($second_price==null || $frist_price==null)
+                    {
+                        $second_price = $max_price;
+                        $frist_price = 0;
+                    }
+                ?> 
+                <a href="javascript:;">Price</a>                
+                 <div class="price_filter_box">                       
+                    <input type="text" class="price_slider_range span2" value="" data-slider-min="0" data-slider-max="<?=$max_price?>" data-slider-step="1" data-slider-value="[<?=$frist_price?>,<?=$second_price?>]"/>
+                     <div class="show_price_filter_range">$<span class="min_price"></span> &nbsp;-&nbsp; $<span class="max_price"></span></div>
+                 </div>
+        </li>                           
+    </ul>
+        <div class="clearfix"></div>
+        <div class="sidebar_shop_product_btn_link">
+                <a href="#pccf_form_11" class="pccflightbox cboxElement custom_default_btn btn-block text-center m_bottom20" style="">Contact shop Owner</a>
+                <div class="clearfix"></div>
+                <a href="javascript:;" onclick="alert('working on it');" class="save_btn btn-block text-center">Request Custom Order</a>
+        </div> 
+    
+    <ul class="other_link_shop_product">
+            <li><a href="">Sales <span class="number_item">20</span></a></li>
+            <li><a href="">Reviews <span class="number_item">20</span></a></li>
+    </ul>
+    
+    <ul class="other_link_shop_product" style="border: 0px;">
+            <li><a href="#pccf_form_32" class="pccflightbox cboxElement" id="report_shop_binga_vendor_btn" style="margin: 0px;">Report this shop to BINGABINGA</a></li>                    
+    </ul>
+         
+
+</aside>
+ <div class="col-md-9 col-sm-9 colxs-12">
+<div class="shop_product_box">
+<?php  if(isset($_REQUEST['weight'])){
+    
+
+?>
+                                                             
+ <ul class="shop_product_box_row">
+
+
+    <?php 
+                  
+    
+    $item_qty=0;
+      $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product1=Mage::getModel('catalog/product')->load($_id);
+     $_product=$_product1; // will bring back the first 20 products
+       
+         //print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){
+     if($_product->getweight()){
+     $item_qty++;
+     
+     //echo $_product->getattribute_set_id();
+ 
+    // echo $_product->getweight();
+      
+     ?>
+            <li class="shop_product_item col-md-3 col-sm-3 col-xs-6">
+            <input type="hidden" value="<?=$_id;?>"/>
+            <a class="product_section_box_item " href="<?php echo $_product->getProductUrl();?>" title="<?php echo $_product->getName() ?>">
+                <img class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo 'Product-image' ?>" />    
+                    <div class="product_section_box_item_detail">
+                    <h4 class="product_name"> <?php echo $_product->getName() ?></h4>
+                    <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;"><?= $currencycode = Mage::app()->getStore()->getCurrentCurrencyCode();?></span></span></div>
+                    </div>
+            </a>
+                  
+                 
+            </li>
+    <?php }} endforeach ?>
+   
+     
+ 
+  
+   </ul>
+
+
+
+<?php  }else if(isset($_REQUEST['Color'])){
+    
+    $color_id=$_REQUEST['Color'];
+ ?>
+
+ <ul class="shop_product_box_row">
+
+
+    <?php 
+                  
+    
+    $item_qty=0;
+      $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id);
+     // print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){ 
+    if($_product->getColor()==$color_id){
+        
+        
+        
+$attr = $_product->getResource()->getAttribute("color");
+if ($attr->usesSource()) {
+    
+    
+   // echo $color_label = $attr->getSource()->getOptionText($_product->getColor());
+
+
+        
+        
+     
+     $item_qty++;
+     
+     //echo $_product->getattribute_set_id();
+ 
+ // echo $_product->getColor();
+   //    echo '<br>';
+     ?>
+            <li class="shop_product_item col-md-3 col-sm-3 col-xs-6">
+            <input type="hidden" value="<?=$_id;?>"/>
+            <a class="product_section_box_item " href="<?php echo $_product->getProductUrl();?>" title="<?php echo $_product->getName() ?>">
+                <img class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo 'Product-image' ?>" />    
+                    <div class="product_section_box_item_detail">
+                    <h4 class="product_name"> <?php echo $_product->getName() ?></h4>
+                    <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;"><?= $currencycode = Mage::app()->getStore()->getCurrentCurrencyCode();?></span></span></div>
+                    </div>
+            </a>
+                  
+                 
+            </li>
+    <?php }}
+    } endforeach ?>
+     
+     
+ 
+  
+   </ul>
+   
+   <?php  }else if(isset($_REQUEST['Price'])){ ?>
+
+ <ul class="shop_product_box_row">
+
+
+    <?php 
+    $frist_price=$_REQUEST['Price'];
+   
+   $second_price=$_REQUEST['b'];
+  
+    
+    $item_qty=0;
+    
+   $collection = Mage::getModel('catalog/product')->getCollection()
+       ->addFieldToFilter('price', 
+     array(array('from'=>$frist_price,'to'=>$second_price)));
+    
+    
+    //  $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product1=Mage::getModel('catalog/product')->load($_id);
+     $_product=$_product1; // will bring back the first 20 products
+       
+        // print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){ 
+    $priceget=$_product->getPrice();
+        
+     $item_qty++;
+      
+     ?>
+            <li class="shop_product_item col-md-3 col-sm-3 col-xs-6">
+            <input type="hidden" value="<?=$_id;?>"/>
+            <a class="product_section_box_item " href="<?php echo $_product->getProductUrl();?>" title="<?php echo $_product->getName() ?>">
+                <img class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo 'Product-image' ?>" />    
+                    <div class="product_section_box_item_detail">
+                    <h4 class="product_name"> <?php echo $_product->getName() ?></h4>
+                    <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;"><?= $currencycode = Mage::app()->getStore()->getCurrentCurrencyCode();?></span></span></div>
+                    </div>
+            </a>
+                  
+                 
+            </li>
+    <?php } endforeach ?>
+   
+     
+ 
+  
+   </ul>
+   
+   <?php }  else if(isset($_REQUEST['product_search'])){
+    
+       $select_value=$_REQUEST['select_value'];
+     if($select_value=="Price"){
+         $frist_priceA=$_REQUEST['product_search_val'];
+   
+   $second_priceA=$_REQUEST['product_search_val'];
+  
+    
+    $item_qty=0;
+    
+   $collection = Mage::getModel('catalog/product')->getCollection()
+       ->addFieldToFilter('price', 
+     array(array('from'=>$frist_priceA,'to'=>$second_priceA)));
+    
+    
+    //  $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product1=Mage::getModel('catalog/product')->load($_id);
+     $_product=$_product1; // will bring back the first 20 products
+       
+        // print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){ 
+    $priceget=$_product->getPrice();
+        
+     $item_qty++;
+    ?>
+    
+ <ul class="shop_product_box_row">
+
+
+    <?php 
+   
+      
+     ?>
+            <li class="shop_product_item col-md-3 col-sm-3 col-xs-6">
+            <input type="hidden" value="<?=$_id;?>"/>
+            <a class="product_section_box_item " href="<?php echo $_product->getProductUrl();?>" title="<?php echo $_product->getName() ?>">
+                <img class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo 'Product-image' ?>" />    
+                    <div class="product_section_box_item_detail">
+                    <h4 class="product_name"> <?php echo $_product->getName() ?></h4>
+                    <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;"><?= $currencycode = Mage::app()->getStore()->getCurrentCurrencyCode();?></span></span></div>
+                    </div>
+            </a>
+                  
+                 
+            </li>
+    <?php } endforeach ?>
+   
+     
+ 
+  
+   </ul>
+   <?php
+   }else{  
+    $frist_priceA=$_REQUEST['product_search_val'];
+   
+   $second_priceA=$_REQUEST['product_search_val'];
+  
+    
+    $item_qty=0;
+    
+   $collection = Mage::getModel('catalog/product')->loadByAttribute('name', $frist_priceA);
+
+    //  $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+    // foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product1=Mage::getModel('catalog/product')->loadByAttribute('name', $frist_priceA);
+     $_product=$_product1; // will bring back the first 20 products
+       
+        // print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_product)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){ 
+    $priceget=$_product->getPrice();
+        
+     $item_qty++;?>
+   
+     
+ <ul class="shop_product_box_row">
+
+
+    <?php 
+   
+      
+     ?>
+            <li class="shop_product_item col-md-3 col-sm-3 col-xs-6">
+            <input type="hidden" value="<?=$_id;?>"/>
+            <a class="product_section_box_item " href="<?php echo $_product->getProductUrl();?>" title="<?php echo $_product->getName() ?>">
+                <img class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo 'Product-image' ?>" />    
+                    <div class="product_section_box_item_detail">
+                    <h4 class="product_name"> <?php echo $_product->getName() ?></h4>
+                    <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;"><?= $currencycode = Mage::app()->getStore()->getCurrentCurrencyCode();?></span></span></div>
+                    </div>
+            </a>
+                  
+                 
+            </li>
+    <?php }
+    // endforeach ?>
+   
+     
+ 
+  
+   </ul>
+   <?php }}else{
+   ?>
+ 
+
+ <ul class="shop_product_box_row">
+
+
+    <?php 
+                  
+    
+    $item_qty=0;
+      $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product1=Mage::getModel('catalog/product')->load($_id);
+     $_product=$_product1; // will bring back the first 20 products
+       
+        // print_r($_product);
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){ 
+     
+     $item_qty++;
+     
+     //echo $_product->getattribute_set_id();
+ 
+ /// echo $_product->getColor();
+      // echo '<br>';
+     ?>
+            <li class="shop_product_item col-md-3 col-sm-3 col-xs-6">
+            <input type="hidden" value="<?=$_id;?>"/>
+            <a class="product_section_box_item " href="<?php echo $_product->getProductUrl();?>" title="<?php echo $_product->getName() ?>">
+                <img class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo 'Product-image' ?>" />    
+                    <div class="product_section_box_item_detail">
+                    <h4 class="product_name"> <?php echo $_product->getName() ?></h4>
+                    <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;"><?= $currencycode = Mage::app()->getStore()->getCurrentCurrencyCode();?></span></span></div>
+                    </div>
+            </a>
+                  
+                 
+            </li>
+    <?php } endforeach ?>
+   
+     
+ 
+  
+   </ul>
+   
+   <?php  } ?>
+   
+
+   <script type="text/javascript">//document.getElementById('quty_total_product').innerHTML="<?=$item_qty?>" ;</script>
+   
+  
+  
+  
+  
+ 
+ <?php 
+//$attributes = Mage::getResourceModel('catalog/product_attribute_collection')->getItems();
+//$i==1;
+//foreach ($attributes as $attribute){
+  // echo $attribute->getAttributecode();
+   //echo '<br>';
+    
+    // echo $attribute->getFrontendLabel();
+  //  $i++;
+    
+ //}
+ ?> 
+    
+   </div>
+                                                                
+                                                               
+                                                            </div>
+  
+   
+ 

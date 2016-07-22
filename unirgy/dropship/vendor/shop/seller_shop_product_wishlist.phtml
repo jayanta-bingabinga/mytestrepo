@@ -1,0 +1,170 @@
+<?php 
+$_session = Mage::getSingleton('udropship/session');
+
+  $collection = Mage::getModel('catalog/product')->getCollection();
+  
+  $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+  $namevendor = $vendor_data->getVendorName();
+     $namevendorshop = $vendor_data->getvendor_shop_field();          
+// echo $namevendor; endicia_requester_id
+ $address_vendor =  $vendor_data->getBillingAddress();
+ 
+$Attention= $vendor_data->getvendor_attn();
+ 
+  $logo= $vendor_data->getlogo();
+  $vendor_shop_images_field= $vendor_data->getvendor_shop_images_field();
+  $created_at = date("M,Y", Mage::getModel("core/date")->timestamp($vendor_data->getCreatedAt()));
+ ?> 
+ 
+ 
+
+      
+      
+      <ul class="shop_product_box_row" id="page_id">
+            
+             <?php 
+             
+      if(isset($_REQUEST["search_wishlist"])) { 
+        
+        $search_text=$_REQUEST['search_text'];
+             
+ $collection = Mage::getModel('catalog/product')->getCollection()->addFieldToFilter('name', array('like' => $search_text.'%'));  
+ //$collection = Mage::getModel('catalog/product')->getCollection();  
+  
+  
+             foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+                    $_product=Mage::getModel('catalog/product')->load($_id);
+                   // print_r($_product);
+                
+                 $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+                 if($vendor_id12==$vendor_id){
+                     
+                 
+                
+                if($_id)
+                {
+                $wishlist = Mage::getModel('wishlist/item')->getCollection()->addFieldToFilter('product_id',$_id);
+                
+                if(count($wishlist)) {
+                   $wishlistIds = $wishlist->getColumnValues('wishlist_id');
+                      
+                  // echo $wishlistIds;
+                   // print_r($wishlistIds);
+                    }
+                
+                $_product=Mage::getModel('catalog/product')->load($_id);
+                
+                //$wishListItemCollection = $wishlist->getItemCollection();
+                foreach ($wishlist as $item)
+                 {
+                  $i++;
+             ?>
+             <li class="shop_product_item col-md-3 col-sm-3 col-xs-6"> 
+                        <a class="product_section_box_item " href="<?php echo $item->getProductUrl();?>" title="<?php echo $item->getName() ?>">
+                            <img class="product_section_box_item_img" src="<?php echo Mage::helper('catalog/image')->init($_product, 'small_image')->resize(113, 113); ?>"  alt="<?php echo 'Product-image' ?>" />    
+                                <div class="product_section_box_item_detail">
+                                <h4 class="product_name"> <?php echo $item->getName() ?></h4>
+                                <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;">USD</span></span></div>
+                                </div>
+                        </a>
+                              
+                             
+                        </li>
+                        <?  } } }
+     endforeach; }else{ ?>
+           
+           
+           
+           
+           
+                <?php 
+                 $_session = Mage::getSingleton('udropship/session');
+                 
+                  $vendor_id=$_session->getVendor()->getId();
+                  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+                 $collection = Mage::getModel('catalog/product')->getCollection();
+                   
+                    $i=0;
+                    
+                     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+                    $_product=Mage::getModel('catalog/product')->load($_id);
+                   // print_r($_product);
+                
+                 $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+                 if($vendor_id12==$vendor_id){
+                     
+                 
+                
+                if($_id)
+                {
+                $wishlist = Mage::getModel('wishlist/item')->getCollection()->addFieldToFilter('product_id',$_id);
+                
+                if(count($wishlist)) {
+                   $wishlistIds = $wishlist->getColumnValues('wishlist_id');
+                      
+                  // echo $wishlistIds;
+                   // print_r($wishlistIds);
+                    }
+                
+                $_product=Mage::getModel('catalog/product')->load($_id);
+                
+                //$wishListItemCollection = $wishlist->getItemCollection();
+                foreach ($wishlist as $item)
+                 {
+                  $i++;
+              //  echo $item->getName()."</br>";
+              //  echo $item->getId()."</br>";
+              //  echo $item->getPrice()."</br>";
+               // echo $item->getQty()."</br>";
+                //$itemasas = Mage::getModel('catalog/product')->setStoreId($item->getStoreId())->load($item->getProductId());
+                //if ($item->getDistributorId()) :
+                ?>
+                <li class="shop_product_item col-md-3 col-sm-3 col-xs-6"> 
+                        <a class="product_section_box_item " href="<?php echo $item->getProductUrl();?>" title="<?php echo $item->getName() ?>">
+                            <img class="product_section_box_item_img" src="<?php echo Mage::helper('catalog/image')->init($_product, 'small_image')->resize(113, 113); ?>"  alt="<?php echo 'Product-image' ?>" />    
+                                <div class="product_section_box_item_detail">
+                                <h4 class="product_name"> <?php echo $item->getName() ?></h4>
+                                <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;"><?= $currencycode = Mage::app()->getStore()->getCurrentCurrencyCode();?></span></span></div>
+                                </div>
+                        </a>
+                              
+                             
+                        </li>
+                
+                
+                
+               <?php echo $this->getPagerHtml(); ?>
+                 <!--<img style="border:1px solid green;"class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo $_product->getThumbnailUrl(); ?>" />-->
+                                
+            
+            <?php /*endif; */ }  } ?>
+             <?php } endforeach;
+             //  echo "WishList Total :"; echo $i;
+              } ?>
+               
+ </ul>
+ 
+ <div class="col-xs-12 text-center m_top40 m_bottom40"> 
+    <div class="pagination_box_btn">
+        <a href="javascript:;" class="prev pull-left"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></a>
+            <span class="paging-nav pull-left"></span>
+            <a href="javascript:;" class="next pull-left"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a>
+    </div>
+      
+</div>
+ 
+ 
+  <script>
+    jQuery(document).ready(function() {
+      jQuery('#page_id').Paginationwithhashchange2({
+        nextSelector: '.next',
+        prevSelector: '.prev',
+        counterSelector: '.counter',
+        pagingSelector: '.paging-nav',
+        itemsPerPage: 12,
+        //initialPage: 
+      });
+    });
+  </script>
+ 

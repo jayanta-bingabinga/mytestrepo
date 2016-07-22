@@ -1,0 +1,149 @@
+<?php
+
+$_session = Mage::getSingleton('udropship/session');
+  $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+$collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+      $i=0;
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+   $prod=Mage::getModel('catalog/product')->load($_id);
+   
+//$prod=Mage::getSingleton('catalog/product')->load($_id);
+//print_r($prod);
+
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){
+     
+  
+  
+$productId = $prod->getId();
+  $productId = $_id;
+$reviews = Mage::getModel('review/review')->getCollection()
+    ->addStoreFilter(Mage::app()->getStore()->getId())
+    ->addEntityFilter('product', $productId)
+    ->addStatusFilter(Mage_Review_Model_Review::STATUS_APPROVED)
+    ->setDateOrder()
+    ->addRateVotes();
+
+
+
+    if (count($reviews) > 0) {
+      foreach($reviews AS $review)
+ {
+     $i++;
+    $votes = $review->getRatingVotes();
+    $total = 0;
+    foreach($votes AS $vote)
+    {
+        $total += $vote->getPercent();
+    }
+    $avg = $total / count($votes);
+     $avg123+= $total;
+   
+   $total_review_avg = $avg123/$i;       
+              
+             }} } endforeach;
+          
+ 
+?>
+
+              
+ 
+        <div class="average_review_heading">
+                <span class="pull-left"> Average item review</span> <div class="ratings_img_box m_top5 m_b5 pull-left"><div class="rating-box"><div class="rating" style="width:<?php echo $total_review_avg; ?>%"></div></div> <span class="show_total_review_text">( <?php echo $i;?> )</span></div>
+        </div>
+      
+        
+        
+         <?php
+   $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+   $prod=Mage::getModel('catalog/product')->load($_id);
+   
+$prodgg=Mage::getSingleton('catalog/product')->load($_id);
+//print_r($prod);
+
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){   
+  
+  
+$productId = $prod->getId();
+  $productId = $_id;
+$reviews = Mage::getModel('review/review')->getCollection()
+    ->addStoreFilter(Mage::app()->getStore()->getId())
+    ->addEntityFilter('product', $productId)
+    ->addStatusFilter(Mage_Review_Model_Review::STATUS_APPROVED)
+    ->setDateOrder()
+    ->addRateVotes();
+
+
+
+    if (count($reviews) > 0) {
+      foreach($reviews AS $review)
+{
+    
+    $votes = $review->getRatingVotes();
+    $total = 0;
+    foreach($votes AS $vote)
+    {
+        $total += $vote->getPercent();
+    }
+    $avg = $total / count($votes);
+     $avg123+= $total;
+        
+             
+             ?>
+                  
+     <div class="review-box">
+    <table class="shop_review_table_box table">
+                    <tr class="review_heading_tr">
+                        <td class="shop_review_img_td">
+                                <div class="shop_review_img_box"><span class="fa fa-user shop_review_user_icon"></span></div>
+                        </td>
+                        <td class="shop_reviewed_td">
+                                <div class="shop_reviewed_user_heading">
+                                    Reviewed by <a href="" class="btn-link name_reviewer"> <?=$review->getNickname()."  "?></a> on <?= $this->__('%s', $this->formatDate($review->getCreatedAt()), 'long')?>
+                                </div>
+                                 
+                        </td>
+                    </tr>
+                    
+                    <tr class="review_detail_tr">
+                            <td class="shop_reviewed_td" colspan="2">
+                            
+                                      <div class="ratings_img_box"><div class="rating-box m_b5"><div class="rating" style="width:<?php echo $avg; ?>%"></div></div></div>
+                                 
+                                        <div class="clearfix"></div>                                
+                                        <div class="meadi m_top15 m_bottom15">
+                                              <div class="media-left">
+                                                    <div class="shop_product_review_img">
+                                                           <a href="<?php echo $prod->getProductUrl(); ?>" title="<?php echo $prod->getName(); ?>"> <img src="<?php echo $prod->getThumbnailUrl();  ?>" alt="product-image" /></a>
+                                                    </div>
+                                              </div>
+                                              <div class="media-body">                                                                                  
+                                                <div class="shop_product_review_detail_box">                                            
+                                                    <h5 class="shop_product_review_heading"><?= $review->getTitle();?></h5>
+                                                    <p class="shop_review_text"><?= nl2br($review->getDetail())?></p>                                    
+                                                </div>
+                                              </div>                                        
+                                        </div>                                                                        
+                                        
+                            </td>
+                    </tr>
+                    
+      </table>
+	  </div>
+                     <?php } } } endforeach ?>
+      
+           
+ 
+  
+             
+    
+     
+ 

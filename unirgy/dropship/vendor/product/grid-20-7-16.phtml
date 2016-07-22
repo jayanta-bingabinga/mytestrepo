@@ -1,0 +1,365 @@
+ 
+ <?php
+$_hlp = Mage::helper('udropship');
+$isUdmulti = Mage::helper('udropship')->isUdmultiAvailable();
+$showVsku = $_hlp->isShowVendorSkuColumnInStockTab() && (Mage::helper('udropship')->isUdmultiAvailable() || ($vsAttrCode = Mage::getStoreConfig('udropship/vendor/vendor_sku_attribute')) && Mage::helper('udropship')->checkProductAttribute($vsAttrCode));
+
+
+?>
+
+
+
+<div class="page-header custum_page_header">
+    <h3 class="b pull-left">Listing Manager</h3>
+    <span class="pull-right">
+        <a href="" class="custom_default_btn m_right10"><i class="glyphicon glyphicon-stats"></i> Stats</a>
+        <a href="" class="custom_default_btn m_right10"><i class="glyphicon glyphicon-pencil"></i> Quick edit</a>
+        <a href="" class="dark_gray_btn"><i class="fa fa-plus"></i> Add a listing</a>
+    </span>
+    <div class="clearfix"></div>
+    
+</div>
+
+<!--
+<form method="get">
+<fieldset>
+    <div class="generic-box col2-set">
+        <div class="col-1">
+            <ul class="form-list">
+                <li>
+                    <label for="filter-sku"><?php echo Mage::helper('udropship')->__('System SKU') ?></label><br/>
+                    <input id="filter-sku" name="filter_sku" title="<?php echo Mage::helper('udropship')->__('SKU') ?>" type="text" class="input-text" style="width:160px;" value="<?php echo $this->getRequest()->getParam('filter_sku') ?>" />
+                </li>
+                <?php if ($showVsku): ?>
+                    <li>
+                        <label for="filter-vendor_sku"><?php echo Mage::helper('udropship')->__('Vendor SKU') ?></label><br/>
+                        <input id="filter-vendor_sku" name="filter_vendor_sku" title="<?php echo Mage::helper('udropship')->__('Vendor SKU') ?>" type="text" class="input-text" style="width:160px;" value="<?php echo $this->getRequest()->getParam('filter_vendor_sku') ?>" />
+                    </li>
+                <?php endif ?>
+                <li>
+                    <label for="filter-name"><?php echo Mage::helper('udropship')->__('Product Name') ?></label><br/>
+                    <input id="filter-name" name="filter_name" title="<?php echo Mage::helper('udropship')->__('Product Name') ?>" type="text" class="input-text" style="width:160px;" value="<?php echo $this->getRequest()->getParam('filter_name') ?>" />
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-2">
+            <ul class="form-list">
+                <li>
+                    <label for="filter-vendor_sku"><?php echo Mage::helper('udropship')->__('Vendor SKU') ?></label><br/>
+                    <input id="filter-vendor_sku" name="filter_vendor_sku" title="<?php echo Mage::helper('udropship')->__('Vendor SKU') ?>" type="text" class="input-text" style="width:160px;" value="<?php echo $this->getRequest()->getParam('filter_vendor_sku') ?>" />
+                </li>
+            </ul>
+        </div>
+       
+        <div class="col-2">
+            <ul class="form-list">
+             
+                <li>
+                    <label for="filter-vendor_cost-from"><?php echo Mage::helper('udropship')->__('Vendor Price') ?></label><br/>
+                    <input id="filter-vendor_cost-from" name="filter_vendor_cost_from" title="<?php echo Mage::helper('udropship')->__('From Vendor Price') ?>" type="text" class="input-text" style="width:80px;" value="<?php echo $this->getRequest()->getParam('filter_vendor_cost_from') ?>" /> -
+                    <input id="filter-vendor_cost-to" name="filter_vendor_cost_to" title="<?php echo Mage::helper('udropship')->__('To Vendor Price') ?>" type="text" class="input-text" style="width:80px;" value="<?php echo $this->getRequest()->getParam('filter_vendor_cost_to') ?>" />
+                </li>
+               
+                <?php if (!$isUdmulti): ?>
+                <li>
+                    <label for="filter-stock_status"><?php echo Mage::helper('udropship')->__('Stock Status') ?></label><br/>
+                    <select id="filter-stock_status" name="filter_stock_status" title="<?php echo Mage::helper('udropship')->__('Stock Status') ?>"  style="width:160px;">
+                        <?php $_status = (string)$this->getRequest()->getParam('filter_stock_status') ?>
+                        <option value="" <?php echo $_status===''?'selected="selected"':'' ?>><?php echo Mage::helper('udropship')->__('Any') ?></option>
+                        <option value="1" <?php echo $_status==='1'?'selected="selected"':'' ?>><?php echo Mage::helper('udropship')->__('In Stock') ?></option>
+                        <option value="0" <?php echo $_status==='0'?'selected="selected"':'' ?>><?php echo Mage::helper('udropship')->__('Out of Stock') ?></option>
+                    </select>
+                </li>
+                <?php endif ?>
+                <li>
+                    <label for="filter-stock_qty-from"><?php echo Mage::helper('udropship')->__('Stock Qty') ?></label><br/>
+                    <input id="filter-stock_qty-from" name="filter_stock_qty_from" title="<?php echo Mage::helper('udropship')->__('From Stock Qty') ?>" type="text" class="input-text" style="width:80px;" value="<?php echo $this->getRequest()->getParam('filter_stock_qty_from') ?>" /> -
+                    <input id="filter-stock_qty-to" name="filter_stock_qty_to" title="<?php echo Mage::helper('udropship')->__('To Stock Qty') ?>" type="text" class="input-text" style="width:80px;" value="<?php echo $this->getRequest()->getParam('filter_stock_qty_to') ?>" />
+                </li>
+            </ul>
+        </div>
+        <div class="buttons-set">
+            <input type="submit" value="search" style="display:none" />
+
+            <?php if ($this->getRequest()->getParam('limit')): ?>
+                <input type="hidden" name="limit" value="<?php echo $this->getRequest()->getParam('limit')?>"/>
+            <?php endif ?>
+            <?php if ($this->getRequest()->getParam('p')): ?>
+                <input type="hidden" name="p" value="<?php echo $this->getRequest()->getParam('p')?>"/>
+            <?php endif ?>
+
+            <button class="form-button" name="reset_filter" type="button" onclick="setLocation('<?php echo $this->getUrl('*/*/*')?>')" id="filter-search" value="search"><span><?php echo Mage::helper('udropship')->__('Reset Filter') ?></span></button>
+            <button class="form-button" name="submit_action" type="submit" id="filter-search" value="search"><span><?php echo Mage::helper('udropship')->__('Search') ?></span></button>
+
+        </div>
+    </div>
+</fieldset>
+</form> -->
+
+
+
+
+    <div class="row">
+           <aside class="sidebar_box_data">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search your listings   " />
+                </div>
+                <div class="sidebar_box_data_inner">
+                    <div class="col-xs-12 m_bottom10">
+                        <h5 class="b heding_quick_sidebar">Listing sataus</h5>
+                        <div class="radio">
+                            <label><input type="radio" checked="" name="status_radio" /> Active 20</label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="radio">
+                            <label><input type="radio" name="status_radio" /> Expired 1</label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="radio">
+                            <label><input type="radio" name="status_radio" /> Sold Out 20</label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="radio">
+                            <label><input type="radio" name="status_radio" /> Inactive 1</label>
+                        </div>
+                        
+                        <hr style="border-color:     #ddd;" />
+                        
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="status_radio" /> Featured listings</label>
+                        </div>
+                        
+                        
+                     </div>
+                
+                </div>
+            
+           </aside> <!-- end sidebar -->
+           
+           <div class="content_box_layout">
+                <div class="full_box padding_right">
+                        <div class="btn-group m_bottom15">
+                            <button type="button" class="btn btn-default">Renew</button>
+                            <button type="button" class="btn btn-default">Deavtive</button>
+                            <button type="button" class="btn btn-default">Delete</button>
+                        </div>
+                        
+                        
+                        <div class="pull-right sort_filter_box dropdown">
+                                    Sort: <a href="javascript:;" class="dropdown-toggle sort_toggle_btn" data-toggle="dropdown" aria-haspopup="true">Title A to Z <span class="caret" style="color: #82939a;"></span></a>
+                                        <ul class="dropdown-menu sort_toggle_box" style="padding-top: 10px;padding-bottom: 10px;">
+                                            <li><a href=" ">Title: A to Z</a></li>
+                                            <li><a href="#">Title: Z to A</a></li>
+                                            <li role="separator" class="divider"></li>  
+                                            <li><a href="#">Stock: low to high</a></li>                                            
+                                            <li><a href="#">Stock: high to low</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="#">Price: low to high</a></li>                                            
+                                            <li><a href="#">Price: high to low</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="#">Expiration: soonest first</a></li>                                            
+                                            <li><a href="#">Expiration: latest first</a></li> 
+                                          </ul>
+                        </div>
+                        
+                        <div class="clearfix"></div>
+                        
+                            <form method="post" action="<?php echo $this->getUrl('udropship/vendor/productSave') ?>">
+                            <!--<div class="a-right" style="margin:10px 0">
+                                    <button class="form-button" type="submit"><?php // echo Mage::helper('udropship')->__('Update Information On This Page') ?></button>
+                                </div> -->
+                                <?php // echo $this->getChildHtml('toolbar') ?>
+                               <table class="">
+                                <?php foreach ($this->getProductCollection() as $_p): $_id = $_p->getEntityId(); ?>     
+                                 <?php print_r($_p->getId()); 
+                                        $_product = Mage::getModel('catalog/product')->load($_p->getId()); 
+                                      // print_r($_product);   
+                                 
+                                 ?>      
+                                                          
+                                    <tr>
+                                        <td>
+                                   <div class="panel panel-default listing_manage_product_panel">
+                                        <div class="panel-body">
+                                        
+                                        <div class="media">
+                                                 <div class="media-left pull-left"><input type="checkbox" /></div>
+                                            <div class="media-left pull-left">
+                                                    <a target="_blank" href="<?php echo $this->htmlEscape($_p->getProductUrl()) ?>" target="_blank" class="thumbnail product_item_img">
+                                                        <img src="<?php echo Mage::helper('catalog/image')->init($_product, 'small_image')->resize(113, 113); ?>" alt="img">                                            
+                                                    </a>
+                                            </div>
+                                            <div class="media-body">
+                                                  <table class="listing_devide_part_product_detail" style="width: 100%;">
+                                                      <tr>
+                                                      <td class="left_part">  <p><?php echo $this->htmlEscape($_p->getName()) ?></p>
+                                                       
+                                                       
+                                                         <table class="m_top20 color_666" style="width: 100%;">
+                                                            <tr>
+                                                                  <td>
+                                                                    <?php if (!is_null($_p->getData('_is_stock_qty'))): ?>
+                                                                         <?php echo !is_null($_sq = $_p->getData('_stock_qty')) ? $_sq*1 : '' ?>  <?php echo Mage::helper('udropship')->__('in Stock');?>
+                                                                    <?php else: ?>
+                                                                    <?php echo Mage::helper('udropship')->__('Not Applicable');?>
+                                                                    <?php endif ?>
+                                                                </td>
+                                                                     
+                                                                    <td><span class="color_green_light"> <?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false) . ' '.Mage::app()->getStore()->getCurrentCurrencyCode(); ?></span></td>
+                                                                    <td>Expires Mar 27, 2016</td>
+                                                            
+                                                            </tr> 
+                                                      </table>                                                    
+                                                    </td>
+                                                    <td class="right_part">
+                                                        <span class="fa fa-star star_btn_link"></span>
+                                                         <div class="dropdown listing_setting_dropdown">
+                                                          <button class="btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                           <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                                            <span class="caret"></span>
+                                                          </button>
+                                                          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                             <li></li>
+                                                            <li><a href="">View in BingaBinga</a></li>
+                                                            <li><a href="">View Stats</a></li>
+                                                            <li role="separator" class="divider"></li>
+                                                            <li><a href="">Edit</a></li>
+                                                            <li><a href="">Copy</a></li>
+                                                            <li><a href="">Deactive</a></li>
+                                                            <li><a href="">Renew</a></li>
+                                                            <li><a href="">Share</a></li>
+                                                            <li role="separator" class="divider"></li>
+                                                            <li><a href="">Delete</a></li>
+                                                            <li></li>
+                                                          </ul>
+                                                        </div>
+                                                       </td> 
+                                                       </tr>
+                                                </table>
+                                             </div> <!--end media body-->
+                                        </div> <!--end media -->
+                                        
+                                         
+                                        
+                                        
+                                        </div>
+                                    
+                                    </div> <!--end listing_manage_product_panel-->
+                                    </td>
+                                </tr>
+                                 <?php endforeach ?>
+                            </table>                                                                
+                           
+                                
+                                
+                                <table cellspacing="0" cellpadding="0" class="data-table">
+                                    <?php if (Mage::getStoreConfigFlag('udropship/vendor/show_pid_in_manage_stock')): ?>
+                                    <col width="" />
+                                    <?php endif ?>
+                                    <?php if ($showVsku): ?>
+                                        <col width="" />
+                                    <?php endif ?>
+                                    <col width="" />
+                                    <col width="" />
+                                    <!--<col width="100" />
+                                    <col width="80" />-->
+                                    <?php if (!$isUdmulti): ?>
+                                    <col width="100" />
+                                    <?php endif ?>
+                                    <col width="70" />
+                                    <thead>
+                                        <tr>
+                                            <?php if (Mage::getStoreConfigFlag('udropship/vendor/show_pid_in_manage_stock')): ?>
+                                            <th><?php echo Mage::helper('udropship')->__('System ID')?></th>
+                                            <?php endif ?>
+                                            <th><?php echo Mage::helper('udropship')->__('System SKU')?></th>
+                                            <?php if ($showVsku): ?>
+                                                <th><?php echo Mage::helper('udropship')->__('Vendor SKU')?></th>
+                                            <?php endif ?>
+                                            <th><?php echo Mage::helper('udropship')->__('Product Name')?></th>
+                                            <!--<th><?php echo Mage::helper('udropship')->__('Vendor SKU')?></th>
+                                            <th><?php echo Mage::helper('udropship')->__('Vendor Price')?></th>-->
+                                            <?php if (!$isUdmulti): ?>
+                                            <th><?php echo Mage::helper('udropship')->__('Stock Status')?></th>
+                                            <?php endif ?>
+                                            <th><?php echo Mage::helper('udropship')->__('Stock Qty')?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                <?php foreach ($this->getProductCollection() as $_p): $_id = $_p->getEntityId(); ?>
+                                        <tr>
+                                            <td colspan="4">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                                <table class="">
+                                                                    <tr>
+                                                                              <?php if (Mage::getStoreConfigFlag('udropship/vendor/show_pid_in_manage_stock')): ?>
+                                                                                <td><?php echo $this->htmlEscape($_p->getId()); ?></td>
+                                                                                <?php endif ?>
+                                                                                <td>
+                                                                                    <?php echo $this->htmlEscape($_p->getSku()); ?>
+                                                                                </td>
+                                                                                <?php if ($showVsku): ?>
+                                                                                    <td><?php echo $this->htmlEscape($_p->getVendorSku()); ?></td>
+                                                                                <?php endif ?>
+                                                                                <td>
+                                                                                    <?php echo $this->htmlEscape($_p->getName()) ?>
+                                                                                    <?php if (Mage::helper('udropship')->isModuleActive('Unirgy_DropshipSellYours')): $editOfferId = $_p->getHasEditOfferId() ? $_p->getEditOfferId() : $_id; ?>
+                                                                                    <?php if ($editOfferId): ?>
+                                                                                        <br /><a href="<?php echo $this->getUrl('udsell/index/sell', array('id'=>$editOfferId)) ?>"?><?php echo Mage::helper('udropship')->__('Edit Offer')?></a>
+                                                                                    <?php endif ?>
+                                                                                    <?php endif ?>
+                                                                                </td>
+                                                                                <!--<td><input type="text" class="input-text" name="vp[<?php echo $_id ?>][vendor_sku]" value="<?php echo $this->htmlEscape($_p->getVendorSku()) ?>" style="width:90px"/></td>
+                                                                                <td><input type="text" class="input-text" name="vp[<?php echo $_id ?>][vendor_cost]" value="<?php echo is_null($_p->getCost()) ? '' : $_p->getCost()*1 ?>" style="width:90px"/></td>-->
+                                                                                <?php if (!$isUdmulti): ?>
+                                                                                <td>
+                                                                                    <?php if (!is_null($_p->getData('_stock_status'))): ?>
+                                                                                    <select name="vp[<?php echo $_id ?>][stock_status]" style="width:90px">
+                                                                                        <option value="1" <?php echo $_p->getData('_stock_status')?'selected="selected"':'' ?>><?php echo Mage::helper('udropship')->__('In stock') ?></option>
+                                                                                        <option value="0" <?php echo !$_p->getData('_stock_status')?'selected="selected"':'' ?>><?php echo Mage::helper('udropship')->__('Out of stock') ?></option>
+                                                                                    </select>
+                                                                                    <?php else: ?>
+                                                                                    <?php echo Mage::helper('udropship')->__('Not Applicable');?>
+                                                                                    <?php endif ?>
+                                                                                </td>
+                                                                                <?php endif ?>
+                                                                                <td>
+                                                                                    <?php if (!is_null($_p->getData('_is_stock_qty'))): ?>
+                                                                                    <input type="text" class="input-text" name="vp[<?php echo $_id ?>][stock_qty]" value="<?php echo !is_null($_sq = $_p->getData('_stock_qty')) ? $_sq*1 : '' ?>" style="width:60px"/>
+                                                                                    <?php else: ?>
+                                                                                    <?php echo Mage::helper('udropship')->__('Not Applicable');?>
+                                                                                    <?php endif ?>
+                                                                                </td>
+                                                                    
+                                                                    </tr>
+                                                                
+                                                                </table>
+                                                        </div>
+                                                    
+                                                    </div>
+                                            
+                                            </td>
+                                          
+                                        </tr>
+                                <?php endforeach ?>
+                                    </tbody>
+                                </table>
+                                
+                                <?php echo $this->getChildHtml('toolbar') ?>
+                                <div class="a-right" style="margin:10px 0">
+                                    <button class="form-button" type="submit"><?php echo Mage::helper('udropship')->__('Update Information On This Page') ?></button>
+                                </div>
+                             
+                            </form>
+                        
+                        
+                </div> <!-- end full_box -->
+                
+           </div> <!-- end content_box_layout -->
+           
+    </div>
+
+
+

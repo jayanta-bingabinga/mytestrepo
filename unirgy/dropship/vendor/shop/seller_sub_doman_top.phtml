@@ -1,0 +1,263 @@
+<?php 
+$_session = Mage::getSingleton('udropship/session');
+
+  $collection = Mage::getModel('catalog/product')->getCollection();
+  
+ // $vendor_id=$_session->getVendor()->getId();
+  //$vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+  $vendor_data = Mage::helper('umicrosite')->getCurrentVendor();
+ // print_r($vendor_data);
+ 
+ $vendor_id=$vendor_data->getvendor_id();
+?>
+ <?php
+ 
+  
+//  print_r($vendor_data);
+    $namevendor = $vendor_data->getVendorName();
+     $namevendorshop = $vendor_data->getvendor_shop_field();          
+// echo $namevendor; endicia_requester_id
+ $address_vendor =  $vendor_data->getBillingAddress();
+ 
+$Attention= $vendor_data->getvendor_attn();
+ 
+  $logo= $vendor_data->getlogo();
+  
+  $vendor_shop_images_field= $vendor_data->getvendor_shop_images_field();
+  $Announcement=$vendor_data->getAnnouncement();
+  
+  
+  $created_at = date("Y", Mage::getModel("core/date")->timestamp($vendor_data->getCreatedAt()));
+ ?> 
+ 
+ <?
+  
+  
+    
+    $i=0;
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id);
+   // print_r($_product);
+
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){
+     
+ 
+
+if($_id)
+{
+$wishlist = Mage::getModel('wishlist/item')->getCollection()->addFieldToFilter('product_id',$_id);
+
+if(count($wishlist)) {
+   $wishlistIds = $wishlist->getColumnValues('wishlist_id');
+      
+  // echo $wishlistIds;
+   // print_r($wishlistIds);
+    }
+
+$_product=Mage::getModel('catalog/product')->load($_id);
+
+//$wishListItemCollection = $wishlist->getItemCollection();
+foreach ($wishlist as $item)
+ {
+  $i++;
+ 
+ }  } } endforeach;
+ 
+ 
+ ?>
+ 
+ <?php
+        // review 
+         $a=0;
+         $p = 0;
+         foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+           $prod=Mage::getModel('catalog/product')->load($_id);
+           
+        //$prod=Mage::getSingleton('catalog/product')->load($_id);
+        //print_r($prod);
+        
+         $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+         if($vendor_id12==$vendor_id){
+             $p++;
+          
+           // $_product=Mage::getModel('catalog/product')->load($_id);
+         
+        $productId = $prod->getId();
+        $reviews = Mage::getModel('review/review') 
+                    ->getResourceCollection()
+                    ->addStoreFilter(Mage::app()->getStore()->getId())
+                    ->addEntityFilter('product', $productId)
+                    ->addStatusFilter(Mage_Review_Model_Review::STATUS_APPROVED)
+                    ->setDateOrder()
+                    ->addRateVotes();
+        
+               if (count($reviews) > 0) {
+                      foreach($reviews AS $review)
+                 {
+                     $a++;
+                    $votes = $review->getRatingVotes();
+                    $total = 0;
+                    foreach($votes AS $vote)
+                    {
+                        $total += $vote->getPercent();
+                    }
+                    $avg = $total / count($votes);
+                     $avg123+= $total;
+                   
+                   $total_review_avg = $avg123/$a;       
+                              
+                             }} } endforeach; 
+         
+ ?>  
+ 
+ 
+  <?php
+  // sales total
+     $sales_total=0;
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id); 
+    $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+     if($vendor_id12==$vendor_id){
+         
+          $name = $_product->getName();
+          
+          $product = Mage::getResourceModel('reports/product_collection')
+                    ->addOrderedQty()
+                    ->addAttributeToFilter('entity_id', array('eq' => $_id))
+                    ->setOrder('ordered_qty', 'desc')
+                    ->getFirstItem();
+                    if($product->ordered_qty)
+                    {
+                         // echo $product->ordered_qty.' '.$name.' <br/>';
+                          $sales_total +=$product->ordered_qty;
+                    }
+    
+                       
+         
+         
+         
+         
+           } endforeach; 
+  ?>
+
+
+         
+  <section class="full_layout_section gray-bg show_top_deatil_section">
+                <div class="container">
+                    <div class="row">
+                         <div class="col-md-10 col-xs-12 col-sm-9 shop_top_deatail_box">
+                                <div class="media">
+                                        <div class="media-left">
+                                                 <a href="<?php echo $this->getUrl('udropship/vendor/preferences')?>" class="thumbnail shop_top_logo_box">
+                                                   <?php if($vendor_shop_images_field){?>
+                                                  <img src="<?php echo Mage::getBaseUrl('media').$vendor_shop_images_field ?>" class="shop_logo_img" alt="shop-logo"/>
+                                                 <?php }else {
+                                                    
+                                                 ?>
+                                                 
+                                                  <img src="<?php echo Mage::getBaseUrl('media')?>icon/shop_dummy.png" class="shop_logo_img" alt="shop-logo"/>
+                                                 <?php }?> </a>
+                                        
+                                        </div>
+                                        <div class="media-body shop_common_deatla_box">
+                                             
+                                                    <h2 class="shop_name"><?php echo $namevendorshop ?> </h2> 
+                                                    <p class="shop_tagline"><?php echo $Attention; ?></p>
+                                                    
+                                                    <ul class="shop_link_row">
+                                                            <li><?php echo $address_vendor ?></li>
+                                                            <li> <?=$sales_total?> Sales </li>
+                                                            <li>On BINGABINGA since <? echo $created_at?></li> 
+                                                             
+                                                    </ul>
+                                                    <div class="clearfix"></div>
+                                                    <!--<div class="rating_show_box pull-left">                                                                                         
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 1"></i>                                                                                                                   
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 2"></i>                                                                                                                   
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 3"></i>                                                                                                                   
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 4"></i>                                                                                                                   
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 5"></i>
+                                                                       <span class="show_total_review_text">( )</span> 
+                                                    </div> -->
+                                                    <div class="ratings_img_box m_top5 m_b5 pull-left"><div class="rating-box"><div class="rating" style="width:<?php echo $total_review_avg; ?>%"></div></div> <span class="show_total_review_text">( <?php echo $a;?> )</span></div>
+                                                    <div class="clearfix"></div>
+                                                    <div class="shop_btn_row">
+                                                     <!--   <a href="<?php echo $this->getUrl('udropship/vendor/editshop')?>" class="dark_gray_btn"><i class="fa fa-edit"></i> Edit Shop</a>-->
+                                                        <a href="?whishlist=?" class="favourite_show_btn"><i class="fa fa-heart-o"></i> Favorite shop ( <?php echo $i; ?> )</a>
+                                                    </div>
+                                             
+                                        
+                                        </div>                                            
+                                </div>
+                            
+                         </div>
+                         <div class="col-md-2 col-xs-12 col-sm-3 shop_top_owner_deatail_box">
+                            <h3 class="shop_owner_heading">SHOP OWNER </h3> 
+                               <a href="<?php echo $this->getUrl('udropship/vendor/preferences')?>" class="shop_top_owner_logo" title="<?php echo $namevendor ?>">
+                                  <?php if($logo){?>
+                                  <img src="<?php echo Mage::getBaseUrl('media').$logo ?>" class="owner_logo_img img-circle " alt="owner-logo"/>    
+                                  <?php }else {?>
+                                   <img src="<?php echo Mage::getBaseUrl('media')?>icon/user_dummy_icon.png" class="owner_logo_img img-circle " alt="owner-logo"/>    
+                                  <?php }?></a>
+                                <div class="clearfix"></div>
+                                <a class="shop_top_owner_name link_shop_top_owner" href="<?php echo $this->getUrl('udropship/vendor/preferences')?>"><?php echo $namevendor ?> </a>
+                                <div class="clearfix"></div>
+                                 <a class="shop_top_owner_name link_shop_top_owner" href="<?php echo $this->getUrl('udropship/vendor/preferences')?>">Contact</a>
+                                 
+                               
+                                 <ul class="shop_top_owner_social_row">
+                                        <li><a href="" class="social_btn_owner"><img src="<?php echo Mage::getBaseUrl('media').'social/red_fb_icon.png' ?>" /></a></li>
+                                        <li><a href="" class="social_btn_owner"><img src="<?php echo Mage::getBaseUrl('media').'social/red_tw_icon.png' ?>" /></a></li>
+                                        <li><a href="" class="social_btn_owner"><img src="<?php echo Mage::getBaseUrl('media').'social/red_instagram_icon.png' ?>" /></a></li>
+                                        <li><a href="" class="social_btn_owner"><img src="<?php echo Mage::getBaseUrl('media').'social/red_pintrest_icon.png' ?>" /></a></li>
+                                 </ul>
+                                 
+                                  
+                         </div>
+                    </div>
+                </div>
+
+        </section> 
+        
+        <div class="clearfix"></div>
+        
+          <section class="full_layout_section gray-bg">
+                                  <div class="container">
+                                    <div class="row">
+                                         <div class="col-md-12 col-xs-12 col-sm-12">
+                                                <table class="table shop_announcement_table">
+                                                        <tr>
+                                                            <th>Announcement</th>
+                                                            <td><?=$Announcement;?></td>
+                                                        </tr>
+                                                
+                                                </table>
+                                         </div>  <!--end shop_announcement_table -->
+                                            <div class="col-xs-12 shop_layout_tab">
+                                                 <!-- Nav tabs -->
+                                                      <ul class="nav nav-tabs" role="tablist">
+                                                        <li role="presentation" class="active"><a href="#shop_item_tab" aria-controls="shop_item_tab" role="tab" data-toggle="tab">Items ( <?php echo $p; ?> ) </a></li>
+                                                        <li role="presentation"><a href="#shop_review_tab" aria-controls="shop_review_tab" role="tab" data-toggle="tab">Reviews</a></li>
+                                                        <li role="presentation"><a href="#shop_about_tab" aria-controls="shop_about_tab" role="tab" data-toggle="tab">About</a></li>
+                                                        <li role="presentation"><a href="#shop_policies_tab" aria-controls="shop_policies_tab" role="tab" data-toggle="tab">Policies</a></li>
+                                                      </ul>
+
+                                         </div>
+                                         
+                                         
+                                    </div><!--end row-->
+                                  </div><!--end container-->
+                    </section><!--end section-->
+                    
+                    
+                    
+      
+
+          
+  
+  
+ 
+  
+    

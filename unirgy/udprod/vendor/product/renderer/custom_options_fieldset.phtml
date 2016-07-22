@@ -1,0 +1,29 @@
+<?php
+$isCfg = $this->getElement()->getId() == 'configurable';
+$elements = $this->getElement()->getElements()->getIterator();
+$topElements = $this->getElement()->getTopColumn();
+$bottomElements = $this->getElement()->getBottomColumn();
+$lcElements = $this->getElement()->getLeftColumn();
+$rcElements = $this->getElement()->getRightColumn();
+?>
+<div class="custom-listing-panel">
+<div class="panel panel-default">
+    <div class="panel-heading"><h4 class="b"><?php echo $this->getElement()->getLegend() ?></h4> </div>
+    <div class="panel-body">
+ 
+
+<?php if (!empty($topElements)): ?>
+     
+        <?php foreach($topElements as $wideElement): ?>
+            <div class="row" id="<?php echo $wideElement.'-container'?>">
+                <?php echo $this->getChildElementHtml($wideElement); ?>
+            </div>
+        <?php endforeach ?>
+    
+
+<?php endif ?>
+
+ </div>
+
+</div>
+</div>

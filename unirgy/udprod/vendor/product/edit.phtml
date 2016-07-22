@@ -1,0 +1,184 @@
+
+
+<?php
+$_hlp = Mage::helper('udropship');
+$_prHlp = Mage::helper('udprod');
+$_session = Mage::getSingleton('udropship/session');
+$_vendor = Mage::getSingleton('udropship/session')->getVendor();
+$_product = $this->getProduct();
+?>
+<div class="product_listing_box">
+<div class="product_listing_heading">
+
+<?php if ($_product->getId()): ?>
+<h1 class="b"><?php echo $_product->getName() ?> </h1>
+<?php else: ?>
+<h1 class="b">
+<?php echo Mage::helper('udropship')->__('Add a new listing') ?>
+	<!--<span> <?php // echo Mage::helper('udropship')->__('(Type of product: %s)', $_prHlp->getProdSetIdLabel($_product)) ?></span>-->
+</h1>
+    <p class="product_listing_sub_heading">This listing is not active yet. It will be available to shoppers once you open your shop</p>
+<?php endif ?>
+
+ 
+<!--<span class="required"><?php echo Mage::helper('udropship')->__('* Indicated Required Fields') ?></span> -->
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<form action="<?php echo $this->getUrl('udprod/vendor/productPost', array('_current'=>true))?>" class="product_form" method="post" id="product-edit-form">
+<input type="hidden" name="id" value="<?php echo $_product->getId() ?>" />
+<input id="udpef-continue_edit" type="hidden" name="continue_edit" value="" />
+<?php foreach ($this->getForm()->getElements() as $element) {
+    echo $element->toHtml();
+} ?>
+
+<?php /*
+<div class="login-box generic-box">
+<div class="col-1 registered-users">
+<div class="box-head"><h3><?php echo Mage::helper('udropship')->__('Categories') ?></h3></div>
+<table style="width:100%"><tbody><tr><td>
+<?php echo $this->getChildHtml('categories') ?>
+</td></tr></tbody></table>
+</div>
+</div>
+*/?>
+
+<div class="product_form_btn_row">
+    <div class="product-edit-form-loader alert alert-success" style="display:none" id="product-edit-form-loader"><?php echo Mage::helper('udropship')->__('Please wait, submitting...')?></div>
+    <button class="save_btn m_right15 m_bottom15  pull-left" type="button" onclick="udprodEditFormSubmit(this, false)" name="send"><span><?php echo Mage::helper('udropship')->__('Save') ?></span></button>
+    <button class="dark_btn m_right15 m_bottom15 pull-left" type="button" onclick="udprodEditFormSubmit(this, true)" name="send"><span><?php echo Mage::helper('udropship')->__('Save And Continue Edit') ?></span></button>
+    
+     <a href="<?php echo $this->getUrl('udprod/vendor/products')?>" class="pull-left blank_btn"> <i class="fa fa-angle-left"></i>&nbsp; <?php echo Mage::helper('udropship')->__('Return to product list')?></a>
+</div>
+</form>
+
+
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+Validation.addAllThese([
+    ['validate-urlkey', 'Please use only letters (a-z) or numbers (0-9) in this field, first character should be a letter.', function (v) {
+            return Validation.get('IsEmpty').test(v) ||  /^[a-z]+[a-z0-9]+$/.test(v)
+    }],
+    <?php if (Mage::getStoreConfigFlag('udprod/general/gallery_required')): ?>
+    ['udvalidate-images-required', null, function(v, el){
+        var val = [];
+        try {
+            val = el.value.evalJSON();
+        } catch (e) {}
+        return Object.isArray(val) && val.length>0;
+    }],
+    <?php endif ?>
+    ['udvalidate-cfg-required', null, function(v){
+        return $$('.udvalidate-cfg-required-row').length>0;
+    }],
+    ['udvalidate-cfg-required-row', null, function(v){
+        return $$('.cfg-quick-create-qty-'+v).length>0;
+    }],
+    ['udvalidate-special_price', 'Sale Price should be less then Price', function(v, el){
+        var pv = $('price') && $F('price');
+        vv = 1*v;
+        v = (''+v).strip();
+        pv = 1*pv;
+        return v===''||vv<=pv;
+    }],
+    ['udvalidate-special_to_date', 'Sale Price To Date is mandatory with non-empty Sale Price', function(v, el){
+        /*
+        var pv = $('special_price') && $F('special_price');
+        pvv = (''+pv).strip();
+        pv = 1*pv;
+        var adv = Validation.getAdvice('udvalidate-special_price', el);
+        try {
+            Validation.methods['udvalidate-special_price'].error = 'Sale Price should be less then Price'+vv+'<'+pv;
+        } catch () {}
+        if (adv) {
+            adv.update('Sale Price should be less then Price'+vv+'<'+pv);
+        }
+        return v===''||vv<pv;
+        */
+        return true;
+    }],
+    ['required-entry', 'This is a required field.', function(v, el) {
+        return !Validation.get('IsEmpty').test(v, el) && (!el.emptyText || v!=el.emptyText);
+    }]
+]);
+if ($('special_price')) {
+    $('special_price').observe('change', udObserveSP);
+}
+if ($('special_from_date')) {
+    $('special_from_date').observe('change', udObserveSP);
+}
+function udObserveSP() {
+    if ((''+($('special_from_date') && $F('special_from_date') || '')).strip().length>0
+        || (''+($('special_price') && $F('special_price') || '')).strip().length>0
+    ) {
+        ['special_from_date','special_to_date','special_price'].each(function(elId){
+        try {
+            $(elId).addClassName('required-entry');
+            var spfdLbl = $$('label[for="'+elId+'"]')[0];
+            if (spfdLbl.down('.required')) {
+                spfdLbl.down('.required').show();
+            } else {
+                spfdLbl.insert(' <span class="required">*</span>');
+            }
+        } catch (e) {}
+        });
+    } else {
+        ['special_from_date','special_to_date','special_price'].each(function(elId){
+        try {
+            $(elId).removeClassName('required-entry');
+            var spfdLbl = $$('label[for="'+elId+'"]')[0];
+            if (spfdLbl.down('.required')) {
+                spfdLbl.down('.required').remove();
+            }
+        } catch (e) {}
+        });
+    }
+}
+udObserveSP();
+var udprodEditForm = new VarienForm('product-edit-form', true);
+function udprodEditFormSubmit(elem, continueFlag) {
+    if (continueFlag) {
+        $('udpef-continue_edit').value=1;
+    } else {
+        $('udpef-continue_edit').value=0;
+    }
+    $(elem).up().select('button').invoke('hide');
+    $('product-edit-form-loader').show();
+    var res = false;
+    if (udprodEditForm.validator && udprodEditForm.validator.validate()) {
+        res = true;
+        udprodEditForm.form.submit();
+    } else {
+        $(elem).up().select('button').invoke('show');
+        $('product-edit-form-loader').hide();
+    }
+    return res;
+}
+//]]>
+</script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    //name description
+   jQuery('.product_listing_box #name-container .product_form_field_fill_box').siblings('.product_form_field_description ').html('Include keywords that buyers would use to search for your item');
+   
+   //price description
+   jQuery('.product_listing_box #price-container .product_form_field_fill_box').siblings('.product_form_field_description ').html("Factor in the costs of materials and labor, plus any releated business expenses");
+   
+   //price quantities
+   jQuery('.product_listing_box #stock_data_qty-container .product_form_field_fill_box').siblings('.product_form_field_description ').html("For Quantities greater than one,this listing will renew automatically until it sells out. You'll be changed a $0.20 USD listing fee each time"); 
+
+    //price description
+   jQuery('.product_listing_box #description-container .product_form_field_fill_box').siblings('.product_form_field_description ').html("<p>Start with a brief overview that describes your item's finest features. </p> <p>List details like dimensions and key features in easy-to-read bullet points. </p> Tell buyers a bit about your process or the story behind this item."); 
+ 
+ 
+    
+});
+</script>
+
+
+
+
+
+
+

@@ -1,0 +1,415 @@
+<?php 
+ $_session = Mage::getSingleton('udropship/session');
+
+  $collection = Mage::getModel('catalog/product')->getCollection();
+  
+  $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+  $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+  // echo '<script>alert("'.$currentUrl.'")</script>';
+if(isset($_REQUEST['story_headline_submit'])){
+    $story_headline=$_REQUEST['story_headline'];
+    
+   $query=mysql_query("UPDATE udropship_vendor SET story_headline='$story_headline' WHERE vendor_id='$vendor_id'");
+
+if($query){
+    
+   $_SESSION['message']="Edit has been saved";
+   header("Location:".$currentUrl."");
+}else{
+   $_SESSION['message']="Do not saved";
+}
+    
+  }
+  
+  if(isset($_REQUEST['story_submit'])){
+    $story=$_REQUEST['story'];
+     $Querys='UPDATE udropship_vendor SET story="'.$story.'" WHERE vendor_id="'.$vendor_id.'"';
+   $query=mysql_query($Querys);
+
+if($query){
+    
+   $_SESSION['message']="Edit has been saved";
+     header("Location:".$currentUrl."");
+}else{
+   $_SESSION['message']="Do not saved";
+}
+    
+  }
+  
+  if(isset($_REQUEST['video_submit'])){
+    $video=$_FILES['video']['name'];
+    
+            $tmp_name=$_FILES['video']['tmp_name'];
+              $path= move_uploaded_file($_FILES['video']['tmp_name'],"media/vendorshop/".$vendor_id."_".$video);
+  
+   $query=mysql_query("UPDATE udropship_vendor SET video='$video' WHERE vendor_id='$vendor_id'");
+
+if($query){
+    
+   $_SESSION['message']="Edit has been saved";
+     header("Location:".$currentUrl."");
+}else{
+   $_SESSION['message']="Do not saved";
+}
+    
+  }
+   $namevendor = $vendor_data->getVendorName();
+ $video=$vendor_data->getvideo();
+  $photos=$vendor_data->getabouts_photos(); 
+ $comma_separated = explode(",", $photos);
+  $count=count($comma_separated);
+        $first_image= $comma_separated[0];
+       
+
+        $second_image= $comma_separated[1];
+        $thard_image= $comma_separated[2];
+        $forth_image= $comma_separated[3];
+        $fivth_image= $comma_separated[4];
+
+
+  if(isset($_REQUEST['image_submit'])){
+    
+    $image_data=$_FILES['images123']['name'];
+    if($image_data){
+        $image=$vendor_id."_".$_FILES['images123']['name'];
+    }else{
+        $image=$first_image;
+    }
+    
+            $tmp_name=$_FILES['images123']['tmp_name'];
+             $path= move_uploaded_file($_FILES['images123']['tmp_name'],"media/vendorshop/".$vendor_id."_".$image_data);
+  
+   /* second image */
+  $image1_data=$_FILES['images1']['name'];
+  if($image1_data){
+        $image1=$vendor_id."_".$_FILES['images1']['name'];
+    }else{
+        $image1=$second_image;
+    }
+  
+  
+  
+    
+            $tmp_name=$_FILES['images1']['tmp_name'];
+             $path= move_uploaded_file($_FILES['images1']['tmp_name'],"media/vendorshop/".$vendor_id."_".$image1_data);
+  
+  /* thard Images*/
+   $image2_data=$_FILES['images2']['name'];
+    if($image2_data){
+        $image2=$vendor_id."_".$_FILES['images2']['name'];
+    }else{
+        $image2=$thard_image;
+    }
+    
+            $tmp_name=$_FILES['images2']['tmp_name'];
+             $path= move_uploaded_file($_FILES['images2']['tmp_name'],"media/vendorshop/".$vendor_id."_".$image2_data);
+  
+  /* fourth image*/
+ $image3_data=$_FILES['images3']['name'];
+      if($image3_data){
+        $image3=$vendor_id."_".$_FILES['images3']['name'];
+    }else{
+        $image3=$forth_image;
+    }
+            $tmp_name=$_FILES['images3']['tmp_name'];
+             $path= move_uploaded_file($_FILES['images3']['tmp_name'],"media/vendorshop/".$vendor_id."_".$image3_data);
+    
+    /* Fiveth image */
+    $image4_data=$_FILES['images4']['name'];
+    if($image4_data){
+        $image4=$vendor_id."_".$_FILES['images4']['name'];
+    }else{
+        $image4=$fivth_image;
+    }
+            $tmp_name=$_FILES['images4']['tmp_name'];
+             $path= move_uploaded_file($_FILES['images4']['tmp_name'],"media/vendorshop/".$vendor_id."_".$image4_data);
+    
+    $image_data=$image.",".$image1.",".$image2.",".$image3.",".$image4;
+  
+  
+  
+   $query=mysql_query("UPDATE udropship_vendor SET abouts_photos='$image_data' WHERE vendor_id='$vendor_id'");
+
+
+
+if($query){
+    
+   $_SESSION['message']="Edit has been saved";
+     header("Location:".$currentUrl."");
+}else{
+   $_SESSION['message']="Do not saved";
+}
+    
+  }
+  
+  
+
+
+?>
+<div><p style="color: green;text-align: center;"><?=$_SESSION['message'];  unset($_SESSION['message']); 
+    ?></p></div>
+
+
+
+<div class="shop_about_edit_box">
+                
+                  
+                  <div class="option_row_shoop_about_edit_box">
+                        <a data-toggle="collapse" class="option_heading_btn collapsed" href="#shopo_about_edit_title" aria-expanded="false" > Add a story headline</a>                
+                       
+                       <form method="post" action="">
+                        <div class="collapse option_des_box" id="shopo_about_edit_title">
+                                <div class="form-group">
+                                    <input type="text" name="story_headline"class="form-control" value="<?=$vendor_data->getstory_headline();?>"placeholder="Sum up what you do in one sentence. Or just write something catchy" />
+                                </div>
+                                <div class="text-right">
+                                        <button type="submit" name="story_headline_submit"class="save_btn m_right15" style="font-size: 14px;padding: 5px;">Save</button>
+                                        <button type="button" class="custom_default_btn pull-right" data-toggle="collapse" class="option_heading_btn" data-target="#shopo_about_edit_title" aria-expanded="false">Cancel</button>                                
+                                </div>
+                                                        
+                        </div>
+                        </form>
+                    </div> 
+                    
+                    
+                      <div class="option_row_shoop_about_edit_box">
+                        <a data-toggle="collapse" class="option_heading_btn collapsed" href="#shopo_about_edit_description" aria-expanded="false" > Add your story. Tell shoppers a little about your business.</a>                
+                       <form method="post">
+                        <div class="collapse option_des_box" id="shopo_about_edit_description">
+                                <div class="form-group">
+                                    <textarea class="form-control" name="story"placeholder="How did you get stared? what inspires you? we know each seller;s story is unique tell yours here" rows="5"><?=$vendor_data->getstory();?></textarea>
+                                </div>
+                                <div class="text-right">
+                                        <button type="submit" name="story_submit"class="save_btn m_right15" style="font-size: 14px;padding: 5px;">Save</button>
+                                        <button type="button" class="custom_default_btn pull-right" data-toggle="collapse" class="option_heading_btn" data-target="#shopo_about_edit_description" aria-expanded="false" >Cancel</button>                                
+                                </div>
+                                                        
+                        </div>
+                        </form>
+                    </div> 
+                    
+            
+</div>
+            <div class="clearfix"></div>
+
+
+    <div class="shop_about_edit_slider">
+    
+                <div class="row">
+                        <div class="col-md-10 col-xs-12 col-sm-10 col-md-offset-1 col-sm-offset-1">
+                                <h4 class="b text-center shop_about_edit_slider_heading">Add a video  and up to 5 photos</h4>
+                                <p class="text-center">Share photos of your process, workspace or anything that can inspire your buyers.</p>
+                                    <table class="shop_about_edit_slider_table table">
+                                            <tr>
+                                                    <td class="img_td"><a href="#about_video_edit_modal" data-toggle="modal" data-target="#about_video_edit_modal" ><img src="<?php echo Mage::getBaseUrl('media')?>icon/video_icon_image.png" class="img-responsive m_b5" alt="video-img" /></a> Max: 300mb</td>
+                                                    <td><a href="#about_video_edit_modal" data-toggle="modal" data-target="#about_video_edit_modal" class="about_link_upload">Add Video</a><p class="m_bottom30">Show a bit about what you do</p></td>                                            
+                                            </tr>
+                                            
+                                            <tr>
+                                                    <td class="img_td"><a href="#about_image_edit_modal" data-toggle="modal" data-target="#about_image_edit_modal" class="about_link_upload"><img src="<?php echo Mage::getBaseUrl('media')?>icon/img_icon_image.png" class="img-responsive" alt="video-img" /></a></td>
+                                                    <td><a href="#about_image_edit_modal" data-toggle="modal" data-target="#about_image_edit_modal" class="about_link_upload"> Add up to 5 photos with captions</a><p>Share photos of your process,workspace or anything that might inspire buyers</p></td>
+                                            </tr>
+                                    </table>
+                        </div>
+                </div>
+    
+    </div>  
+    
+     <!-- Modal image_edit_modal-->
+<div class="modal fade custom-modal" id="about_image_edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width: 900px;">
+  <form method="post"  enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title" id="myModalLabel">Shop image</h4>
+      </div>
+      <div class="modal-body">
+               <div class="about_edit_image_modal_row" id="about_edit_image_modal_images">
+               
+               <div class="col-md-5 col-sm-5 col-xs-12 no-pad-right no-pad-left">
+                    <div class="col-md-6 col-sm-6 col-xs-6 about_edit_image_modal_row_image_mainbox">
+                            <div class="thumbnail about_edit_image_modal_row_image_box"> 
+                            <?php if($first_image){
+                                
+                            ?> 
+                            <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>vendorshop/<?=$first_image?>" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?}else{?>
+                                <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>icon/defult_images_icon.png" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?php }?></div>
+                              <input type="file" name="images123"class="about_edit_image_modal_images_inputfile" style="display: none;" />
+                   </div> <!--end box 1-->
+                   
+                   <div class="col-md-6 col-sm-6 col-xs-6 about_edit_image_modal_row_image_mainbox">
+                            <div class="thumbnail about_edit_image_modal_row_image_box"> 
+                            <?php if($second_image){                               
+                            ?> 
+                            <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>vendorshop/<?=$second_image?>" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?}else{?>
+                                <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>icon/defult_images_icon.png" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?php }?></div>
+                              <input type="file" name="images1"class="about_edit_image_modal_images_inputfile" style="display: none;" />
+                   </div> <!--end box 2-->
+                   
+               </div>
+               <div class="col-md-7 col-sm-7 col-xs-12 no-pad-right no-pad-left">    
+                   <div class="col-md-4 col-sm-4 col-md-6 about_edit_image_modal_row_image_mainbox">
+                            <div class="thumbnail about_edit_image_modal_row_image_box"> 
+                            <?php if($thard_image){
+                                
+                            ?> 
+                            <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>vendorshop/<?=$thard_image?>" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?}else{?>
+                                <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>icon/defult_images_icon.png" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?php }?></div>
+                              <input type="file" name="images2"class="about_edit_image_modal_images_inputfile" style="display: none;" />
+                   </div> <!--end box 3-->
+                   
+                   <div class="col-md-4 col-sm-4 col-md-6 about_edit_image_modal_row_image_mainbox">
+                          <div class="thumbnail about_edit_image_modal_row_image_box"> 
+                            <?php if($forth_image){
+                                
+                            ?> 
+                            <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>vendorshop/<?=$forth_image?>" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?}else{?>
+                                <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>icon/defult_images_icon.png" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?php }?></div>
+                              <input type="file" name="images3"class="about_edit_image_modal_images_inputfile" style="display: none;" />
+                   </div> <!--end box 4-->
+                   
+                   <div class="col-md-4 col-sm-4 col-md-6 about_edit_image_modal_row_image_mainbox">
+                          <div class="thumbnail about_edit_image_modal_row_image_box"> 
+                            <?php if($fivth_image){
+                                
+                            ?> 
+                            <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>vendorshop/<?=$fivth_image?>" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?}else{?>
+                                <img  alt="default-img" src="<?php echo Mage::getBaseUrl('media')?>icon/defult_images_icon.png" class="img-responsive about_edit_image_modal_row_image_box_uploaded_img"/>                               
+                            <?php }?></div>
+                              <input type="file" name="images4"class="about_edit_image_modal_images_inputfile" style="display: none;" />
+                   </div> <!--end box 5-->
+                 </div>  
+              </div><!--end about_edit_image_modal_row-->
+              <div class="clearfix"></div>  
+      </div>
+      <div class="modal-footer" style="background-color: #dbeaf4;">        
+               <button type="submit" name="image_submit"class="save_btn m_right15">Save images</button>
+                <button type="button" class="white_btn" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+
+    
+    <!-- Modal video_edit_modal-->
+<div class="modal fade custom-modal" id="about_video_edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width: 700px;">
+  <form method="post"  enctype="multipart/form-data" id="choose_about_edit_video_form" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title" id="myModalLabel">Shop video</h4>
+      </div>
+      <div class="modal-body">
+               <div class="col-md-4 col-sm-4 col-xs-12">
+                    <p class="m_top25">See the shop video FAQs for all sorts of ideas and advice on making a great shop video. By uploading a video,you confirm that you have all the necessary rights to the content and you agree to BINGABINGA's Terms of Use</p>
+                     <p>MOV,MPEG,AVI,MP4,M4V-300MB file limit</p>
+                     <button type="button" class="save_btn about_edit_video_modal_add_video_btn" style="font-size: 14px;min-width: 150px;">Add Video</button>
+                     <div class="alert alert-danger alert-sm m_top20 error_choose_about_edit_video_form" style="display: none;"><b>Error!</b> File Unsupported <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button></div>
+               </div>
+               <div class="col-md-8 col-sm-8 col-xs-12">
+                    <h4 class="m_top3 pull-left">Have a video ready to go?</h4>
+                     <input type="file" name="video" id="choose_about_edit_video_btn" style="display: none;" />
+                     <button type="submit"name="video_submit" class="custom_default_btn pull-left submit_edit_video" style="margin: -3px 0px 6px 10px;display: none;">Submit video</button> 
+                     <div class="clearfix"></div>
+                     <?php if($video){                       
+                     ?><div class="about_edit_video_layout"><video style="width: 100%;" class="about_edit_video_show" src="<?php echo Mage::getBaseUrl('media')?>vendorshop/<?=$vendor_id?>_<?=$video?>" controls></video></div>
+                    <?}else{?>
+                    <div class="about_edit_video_layout"><video style="width: 100%;" class="about_edit_video_show" src="<?php echo Mage::getBaseUrl('media')?>video/videoplayback.mp4" controls></video></div>
+                    
+                    <?php }?>
+                    <p class="text-center m_0">Watch this video for inspiration and technical tips</p> 
+               </div>
+              <div class="clearfix"></div>  
+      </div>
+      <div class="modal-footer" style="background-color: #dbeaf4;">        
+                <h4 class="b text-center">Don't have a video?</h4>                
+                <p class="text-center font12">Check out Sell On BINGABINGA on the iPhone. We have some easy tools there that'll help you make your first video.</p>                
+               <div class="text-center"><a href="" class="btn "><img alt="ipone-btn" src="<?php echo Mage::getBaseUrl('media')?>icon/iphone_app_store_btn.png" /></a></div>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery('#choose_about_edit_video_form .about_edit_video_modal_add_video_btn').click(function(){
+        jQuery('#choose_about_edit_video_form input#choose_about_edit_video_btn').trigger('click');
+        jQuery('#choose_about_edit_video_form .error_choose_about_edit_video_form').fadeOut();
+    });
+    
+    // 
+     jQuery("#choose_about_edit_video_btn").on("change", function()
+    {
+         var files = !!this.files ? this.files : []; 
+         
+            if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+            var get_filesize = (this.files[0].size / 1024);
+          //  alert(get_filesize);
+            if (/^video/.test( files[0].type) && get_filesize<=307200){ // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                
+                reader.onload  = function(e){ // set image data as background of div
+                var result = this.result;
+              //  alert(result);
+                 jQuery('#choose_about_edit_video_form video.about_edit_video_show').attr('src',result);
+                 jQuery('#choose_about_edit_video_form button.submit_edit_video').show();
+                }
+            }
+            
+            
+            else{
+                jQuery(this).val(''); 
+                jQuery('#choose_about_edit_video_form .error_choose_about_edit_video_form').fadeIn();
+            }  
+            
+        });
+        
+        // about_edit_image_modal_images
+        
+        
+        jQuery('#about_edit_image_modal_images .about_edit_image_modal_row_image_mainbox .about_edit_image_modal_row_image_box').click(function(){            
+          jQuery(this).siblings('input.about_edit_image_modal_images_inputfile').trigger('click'); 
+        //  alert('choose'); 
+        });
+        jQuery('#about_edit_image_modal_images .about_edit_image_modal_row_image_mainbox input.about_edit_image_modal_images_inputfile').on("change",function(){
+        //   alert('choose'); 
+             
+                 var files = !!this.files ? this.files : [];
+                 var get_img_path = $(this).val();
+                 
+              
+                if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+                 jQuery(this).siblings('.about_edit_image_modal_row_image_box').addClass('current_img_edit_box');
+                if (/^image/.test( files[0].type)){ // only image file
+                    var reader = new FileReader(); // instance of the FileReader
+                    reader.readAsDataURL(files[0]); // read the local file
+                    
+                    reader.onload  = function(e){ // set image data as background of div
+                    var result = this.result;
+                     
+                    //alert(result);
+                    jQuery('.about_edit_image_modal_row_image_box.current_img_edit_box img.about_edit_image_modal_row_image_box_uploaded_img').attr('src',result);
+                     jQuery('#about_edit_image_modal_images .about_edit_image_modal_row_image_box.current_img_edit_box').removeClass('current_img_edit_box');
+                    }
+                }
+             
+        });
+            
+});
+</script>

@@ -1,0 +1,260 @@
+ <?php
+$_session = Mage::getSingleton('udropship/session');
+$_isUdpo = Mage::helper('udropship')->isUdpoActive();
+$_isUdreport = Mage::helper('udropship')->isModuleActive('Unirgy_DropshipVendorReport');
+$_dashboardUrl = $_isUdpo ? $this->getUrl('udpo/vendor') : $this->getUrl('udropship/vendor');
+$_active = $this->getActivePage();
+$_isUrmaActive = Mage::helper('udropship')->isModuleActive('Unirgy_Rma')
+    && $_session->isLoggedIn();
+$_isUstockPoActive = Mage::helper('udropship')->isModuleActive('ustockpo')
+     && $_session->isLoggedIn() && $_session->getVendor()->getDistributorId();
+$_isTierShip = $_session->getVendor()->getAllowTiershipModify();
+?>
+ 
+
+<h1>Shop Name : <?php echo $this->htmlEscape(Mage::helper('udropship')->__('%s', $_session->getVendor()->getVendorName())) ?></h1>
+ <?php
+ 
+  $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+//  print_r($vendor_data);
+            $namevendor = $vendor_data->getVendorName();        
+       // echo $namevendor; 
+         $address_vendor =  $vendor_data->getBillingAddress();
+         
+         echo $Attention= $vendor_data->getvendor_attn();
+         
+          $logo= $vendor_data->getlogo();
+          
+          $created_at= $vendor_data->getcreated_at();
+          
+          
+         ?> 
+         
+         
+ <h3>Address: <?=$address_vendor?></h3>
+ <h3>Attention : <?= $Attention?> <img src="../../media/<?php echo $logo ?>" alt="../../media/<?php echo $logo ?>" height="50" width="50" class="small-image-preview v-middle" /></h3>
+ 
+ <p> Date : <?= $this->__('(%s)', $this->formatDate($vendor_data->getcreated_at()), 'long')?></p>
+    <table cellspacing="0" cellpadding="0" class="data-table"><tbody>
+    <?php foreach ($this->getProductCollection() as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id);
+
+
+     ?>
+            <tr>
+                <?php if (Mage::getStoreConfigFlag('udropship/vendor/show_pid_in_manage_stock')): ?>
+                <td class="1"><?php echo $this->htmlEscape($_p->getId()); ?></td>
+                <?php endif ?>
+                <td class="2">
+                    <?php echo $this->htmlEscape($_p->getSku()); ?>  
+                </td>
+                <?php if ($showVsku): ?>
+                    <td class="3"><?php echo $this->htmlEscape($_p->getVendorSku()); ?></td>
+                <?php endif ?>
+                <td class="4">
+                <a href="<?php //$_p->getThumbnailUrl();?>">
+                    <?php echo $this->htmlEscape($_p->getName()) ?></a>
+                     
+                </td>
+                 <td class="5"><?php echo   number_format($_product->getPrice());?> </td>
+                 <td><?php                  
+                 $storeId = Mage::app()->getStore()->getId();
+    $summaryData = Mage::getModel('review/review_summary')->setStoreId($storeId)  ->load($_id);
+   echo $product_data["rating"]=($summaryData['rating_summary']*5)/100;
+                 
+                 ?></td> 
+                 <td class="123"><?php echo $this->escapeHtml($summaryData->getTitle()) ?></td>
+               
+            
+                <td class="7">     
+                <img style="border:1px solid green;"class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo $_product->getThumbnailUrl(); ?>" />
+                            
+                  </td>
+                <td class="8">
+                    <?php if (!is_null($_p->getData('_is_stock_qty'))): ?>
+                    <input type="text" class="input-text" name="vp[<?php echo $_id ?>][stock_qty]" value="<?php echo !is_null($_sq = $_p->getData('_stock_qty')) ? $_sq*1 : '' ?>" style="width:60px"/>
+                    <?php else: ?>
+                    <?php echo Mage::helper('udropship')->__('Not Applicable');?>
+                    <?php endif ?>
+                </td>
+            </tr>
+    <?php endforeach ?>
+        </tbody>
+    </table>
+     
+     <div>WISHLIST  DATA SHOW </div>  <br /><br /><br />
+     
+     
+ <?php 
+  foreach ($this->getProductCollection() as $_p): $_id = $_p->getEntityId() ;
+  
+   
+ 
+ 
+
+if($_id)
+{
+$wishlist = Mage::getModel('wishlist/item')->getCollection()->addFieldToFilter('product_id',$_id);
+
+if(count($wishlist)) {
+   $wishlistIds = $wishlist->getColumnValues('wishlist_id');
+      
+  // echo $wishlistIds;
+   // print_r($wishlistIds);
+    }
+
+$_product=Mage::getModel('catalog/product')->load($_id);
+
+//$wishListItemCollection = $wishlist->getItemCollection();
+foreach ($wishlist as $item)
+{
+echo $item->getName()."</br>";
+echo $item->getId()."</br>";
+echo $item->getPrice()."</br>";
+echo $item->getQty()."</br>";
+//$itemasas = Mage::getModel('catalog/product')->setStoreId($item->getStoreId())->load($item->getProductId());
+//if ($item->getDistributorId()) :
+?>
+<img src="<?php echo Mage::helper('catalog/image')->init($_product, 'small_image')->resize(113, 113); ?>" width="113? height="113? />
+ <!--<img style="border:1px solid green;"class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo $_product->getThumbnailUrl(); ?>" />-->
+                
+
+<?php /*endif; */ } } ?>
+ <?php endforeach ?>
+ 
+ 
+ 
+ 
+ <h1>REVIEW  DATA SHOW</h1>
+ 
+  <?php
+ 
+   foreach ($this->getProductCollection() as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id);
+ $prod=Mage::getSingleton('catalog/product')->load($_id);
+$productId = $prod->getId();
+$reviews = Mage::getModel('review/review')
+            ->getResourceCollection()
+            ->addStoreFilter(Mage::app()->getStore()->getId())
+            ->addEntityFilter('product', $productId)
+            ->addStatusFilter(Mage_Review_Model_Review::STATUS_APPROVED)
+            ->setDateOrder()
+            ->addRateVotes();
+
+      
+          
+        $storeId = Mage::app()->getStore()->getId();
+    $summaryData = Mage::getModel('review/review_summary')->setStoreId($storeId)  ->load($_id);
+$product_rating+=($summaryData['rating_summary']*5)/100;
+            
+
+    if (count($reviews) > 0) { 
+         $i=1;
+        foreach ($reviews->getItems() as $review) {
+            foreach( $review->getRatingVotes() as $vote ) {
+                $ratings[] = $vote->getPercent();
+                 
+            }
+            
+              
+             
+             
+             ?> <?php }   $i++;} endforeach;
+             
+             
+           /*  $arrlength = count($ratings);
+
+for($x = 0; $x < $arrlength; $x++) {
+    echo $Average+=$ratings[$x];
+    echo "<br>";
+}*/
+
+ $count=$i*$product_rating*5/100;
+
+?>
+
+             
+             
+ <h3>ratings <?= $count;?></h3>
+ <h3>Averge Items Review (<?=$i?>)</h3>  
+  <table cellspacing="0" cellpadding="0" class="data-table">
+      <tr> 
+      <td>Name On Date</td>
+      <td>Review</td>
+      <td>Product Image</td>
+      <td>Title</td>
+      <td>Discription</td>
+      
+      </tr>
+  <tbody>
+  <?php
+   foreach ($this->getProductCollection() as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id);
+ $prod=Mage::getSingleton('catalog/product')->load($_id);
+$productId = $prod->getId();
+$reviews = Mage::getModel('review/review')
+            ->getResourceCollection()
+            ->addStoreFilter(Mage::app()->getStore()->getId())
+            ->addEntityFilter('product', $productId)
+            ->addStatusFilter(Mage_Review_Model_Review::STATUS_APPROVED)
+            ->setDateOrder()
+            ->addRateVotes();
+     
+            
+
+    if (count($reviews) > 0) {
+        foreach ($reviews->getItems() as $review) {
+            foreach( $review->getRatingVotes() as $vote ) {
+                $ratings[] = $vote->getPercent();
+                 
+            }
+            
+              
+             
+             
+             ?>
+                 
+             <?php 
+             
+    
+       
+      //print_r($getTitle);
+        
+  //  print_r($ratings);
+    
+
+             
+             
+             ?>
+    <tr>
+      
+      <td><?=$review->getNickname()."  "?> <?= $this->__('(%s)', $this->formatDate($review->getCreatedAt()), 'long')?></td>
+      <td><?php                  
+                 $storeId = Mage::app()->getStore()->getId();
+    $summaryData = Mage::getModel('review/review_summary')->setStoreId($storeId)  ->load($_id);
+   echo $product_data["rating"]=($summaryData['rating_summary']*5)/100;
+                 
+                 ?></td>
+      <td><img style="border:1px solid green;"class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo $_product->getThumbnailUrl(); ?>" />
+              </td>
+      <td><?= $review->getTitle();?></td>
+      <td><?= nl2br($review->getDetail())?></td>
+      
+      </tr>
+        <?php } } endforeach ?>
+  
+      </tbody>
+   </table>
+     
+ 
+ 
+ 
+     
+   
+ 
+ 
+ 
+
+ 
+ 

@@ -1,0 +1,171 @@
+<?php 
+$_session = Mage::getSingleton('udropship/session');
+
+  $collection = Mage::getModel('catalog/product')->getCollection();
+  
+  $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+    //print_r($vendor_data);
+  
+  $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+
+
+ $policies_country = $vendor_data->getpolicies_country();
+ 
+ $pieces = explode(",", $policies_country);
+ $counts=count($pieces);
+ 
+ $policies_to_day = $vendor_data->getpolicies_to_day();
+  $policies_to_dayss= explode(",", $policies_to_day);
+
+$policies_form_day = $vendor_data->getpolicies_form_day();
+
+  $policies_form_days= explode(",", $policies_form_day);
+  
+  $policies_type_day= $vendor_data->getpolicies_type_day();
+  
+  $policies_accept_term= $vendor_data->getpolicies_accept_term();
+  $policies_accept_terms= explode(",", $policies_accept_term);
+  
+  $policies_contact_me_within= $vendor_data->getpolicies_contact_me_within();
+   $policies_items_back_to_me_within= $vendor_data->getpolicies_items_back_to_me_within();
+   
+   $policies_item_category= $vendor_data->getpolicies_item_category();
+   $policies_item_categorys= explode(",", $policies_item_category);
+  $policies_item_categorysAA=count($policies_item_categorys);
+  
+  
+    $policies_privacy_policy= $vendor_data->getpolicies_privacy_policy();
+  
+   $policies_privacy_policysSS= explode(",", $policies_privacy_policy);
+   
+  // print_r($policies_privacy_policysSS);
+  $policies_update_date= $vendor_data->getpolicies_update_date();
+   
+  
+?>
+
+<div class="shop_police_box m_bottom40 letter_spacing0_3">
+        
+         <div class="col-md-3 col-sm-3 col-xs-12">
+            <h3 class="shop_layout_tab_heading b">Shop policies</h3>
+          </div> 
+          <div class="col-md-9 col-sm-9 col-xs-12 ">
+            <div class="row_shop_police_inner">
+              <h5>Accepted payment methods</h5>
+                <img src="<?php echo Mage::getBaseUrl('media').'icon/accepted_payment_icon.jpg' ?>" alt="img" />
+            </div>             
+               
+          </div>
+          
+          <div class="clearfix"></div>
+          
+          <div class="col-md-3 col-sm-3 col-xs-12">
+            <h4 class="shop_layout_tab_heading b m_top15">Shipping</h4>
+          </div>
+       <div class="col-md-9 col-sm-9 col-xs-12">
+                
+                 <p class="letter_spacing0_3">Your order will be made within 7 - 10 business days after the payment has been cleared. (Please contact us for rush orders.)</p>
+                  <p class=" m_bottom30"> It will be shipped to the address provided by Etsy (not the one provided by Paypal, if different). If for any reason your order needs to be 
+shipped to another address, please let us know via the 'Message to Seller' box during check-out or by contacting us prior to your purchase.
+</p>
+                   <div class="m_bottom20">
+                    <p><strong>Shipping Options </strong></p>
+                     <p>Our shipments are sent through Canadapost.</p>
+                   <p>Regular Mail - The default shipping method, unless otherwise requested. The price quoted in the product listing is for this shipping method.
+The value of the goods is fully insured, but tracking is not available. </p>
+                    
+                    <ul style="list-style-type: disc;padding-left: 20px;margin-bottom: 30;">
+                            <li class="m_bottom10">If you would like your order upgraded to express shipping, please contact us prior to purchase, and a custom listing will be set up with the 
+requested shipping method.</li>
+                            <li class="m_bottom10">International orders - We have no control over customs fees that may be charged upon arrival of your order.</li>
+                    
+                    </ul></div>
+                    
+                    <div class="clearfix"></div>
+                    <div class="m_bottom20">
+                        <p><strong>Holiday Shipping</strong></p>                    
+                        <p>Recommended dates to place orders by:</p>
+                        <p>Canada & US<br />Regular Mail: Nov 29th  <br/> Express/Priority: Dec 13th</p>
+                        <p>International <br/> Regular Mail: Nov 22nd  <br/>Express/Priority: Dec 6th</p>
+                    </div>
+                    
+                    
+                    <p class="m_bottom20">If you have any questions, please don't hesitate to ask!</p>
+                    
+                    <div class="m_bottom20">
+                    <strong>Packaging</strong>                   
+                    <p>Single orders of clutches and sashes will be placed in a gift box. Multiple clutch orders and other items from the shop will be packaged in a 
+plastic gift bag which is then placed inside a secure mailing box or packet. If you are sending a gift and would like to add a personal message,
+ we would be happy to fulfill your request.</p></div>
+
+
+          </div>  <!--end shipping -->
+          
+          
+          <div class="col-md-3 col-sm-3 col-xs-12">
+            <h4 class="shop_layout_tab_heading b m_top15">Return & exchanges</h4>
+          </div>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+                     <div style="margin-bottom: 20px;"><strong>I glacly accept <?php if($policies_accept_terms[0]=="Returns"){ echo "returns";}  ?> <?php if($policies_accept_terms[0]=="Returns" && $policies_accept_terms[1]=="Exchanges"){ echo "and";}?>   <?php if($policies_accept_terms[1]=="Exchanges"){ echo "exchanges";}?></strong>
+                     <p>Just contact me within: <?=$policies_contact_me_within?> days of delivery<br/>Ship items back to me within:<?=$policies_items_back_to_me_within?> days of delivery</p></div>
+            
+              
+               <?php if($policies_accept_terms[2]){?>
+                       <div style="margin-bottom: 20px;"><strong>I glacly accept <?php if($policies_accept_terms[2]=="Cancellations"){ echo "cancellations";}?></strong>
+                     <p>Just contact me within: <?=$policies_contact_me_within?> days of delivery<br/>Ship items back to me within:<?=$policies_items_back_to_me_within?> days of delivery</p></div>
+                     <?php }?>
+                     
+                      <div style="margin-bottom: 20px;"><strong>I don't accept cancellations</strong>
+                     <p>But please contact me if you have any problems with your order.</p></div>
+                     
+                     
+                       <div style="margin-bottom: 20px;"><strong>The following items can't be returned or exchanged</strong>
+                     <p>Because of the nature of these items. unless they arrive damaged or defective, I can't accept returns for.</p></div>
+                     <?php  if($policies_item_categorys){ ?>
+                     <ul style="list-style-type: disc;padding-left: 20px;margin-bottom: 20px;">
+                           <?php
+                                                    for ($row = 0; $row < $policies_item_categorysAA; $row++) {
+                                       
+                                                    
+                                                    ?>  
+                            
+                            
+                            <li><?=$policies_item_categorys[$row];?></li>
+                             
+                            <?php } ?>
+                     </ul>
+                     <?php } ?>
+                      <div class="row_shop_police_inner" style="margin-bottom: 20px;"><strong>Conditions of return</strong>
+                     <p>Buyers are responsible for return shipping costs. If the item is not returned in its orginal condition the buyer is responsible for any loss in value</p></div>
+                     
+                     
+                     
+            </div> <!--end Return & exchanges-->
+            
+            
+              <div class="col-md-3 col-sm-3 col-xs-12">
+                <h4 class="shop_layout_tab_heading b m_top15">Privacy policy</h4>
+              </div>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+                         <strong>I will only use your shipping and billing address, and contact information</strong>
+                        <ul style="list-style-type: disc;padding-left: 20px;margin-bottom: 20px;">
+                        <?php if($policies_privacy_policysSS[0]==1){ ?>
+                            <li><?php if($policies_privacy_policysSS[0]==1){ echo "To communicate with you about your order";}?></li>
+                           <?}  if($policies_privacy_policysSS[1]==2){ ?>
+                            <li><?php if($policies_privacy_policysSS[1]==2){ echo "To fulfill your order";}?></li>
+                            <?php } if($policies_privacy_policysSS[2]==3){ ?>
+                            <li><?php if($policies_privacy_policysSS[2]==3){ echo "For legal reasons (like paying taxes)";}?></li> 
+                           <?} if($policies_privacy_policysSS[3]==4){?>
+                            <li><?php if($policies_privacy_policysSS[3]==4){ echo "Other";}?></li>
+                            <?php } ?>
+                     </ul>
+            </div>
+
+
+</div>  
+ 
+   
+  
+    
+     

@@ -1,0 +1,541 @@
+<?php
+$_session = Mage::getSingleton('udropship/session');
+$vendor_id=$_session->getVendor()->getId();
+ 
+if(isset($_REQUEST['announcement_submit'])){
+    
+    $Anncement=$_REQUEST['announcement_name'];
+    
+    $query=mysql_query("UPDATE udropship_vendor SET announcement='$Anncement' WHERE vendor_id='$vendor_id'");
+
+if($query){
+    
+   $_SESSION['message']="Edit has been saved";
+}else{
+   $_SESSION['message']="Do not saved";
+}
+
+
+ }
+ if(isset($_REQUEST['address_submit'])){
+    
+    $street=$_REQUEST['street'];
+    $city=$_REQUEST['city'];
+    $zip=$_REQUEST['zip'];
+    
+    $query=mysql_query("UPDATE udropship_vendor SET street='$street',city='$city',zip='$zip' WHERE vendor_id='$vendor_id'");
+
+if($query){
+    
+   $_SESSION['message']="Edit has been saved";
+}else{
+    $_SESSION['message']="Do not saved";
+}
+
+
+ }
+
+if(isset($_REQUEST['shop_attn'])){
+    
+    $vendor_attn=$_REQUEST['vendor_attn'];
+   
+    
+    $query=mysql_query("UPDATE udropship_vendor SET vendor_attn='$vendor_attn' WHERE vendor_id='$vendor_id'");
+
+if($query){
+    
+  $_SESSION['message']="Edit has been saved";
+}else{
+   $_SESSION['message']="Edit has been saved";
+}
+}
+  /*          $path= move_uploaded_file($_FILES['images']['tmp_name'],"media/vendor/".$vendor_id."/".$image);
+      $data_query=mysql_query("SELECT * FROM udropship_vendor WHERE vendor_id='$vendor_id'") ; 
+     $data_R=mysql_fetch_array($data_query);
+     $test=$data_R['vendor_name'];
+       $value456645654564=$data_R['custom_vars_combined'];   
+      
+      
+      //{"vendor_shop_field":"pk shop","vendor_shop_images_field":"registration\/16\/topic-1350661050.jpg","custom_html_address_format":"1","html_address_format":"","custom_pdf_address_format":"1","pdf_address_format":"","new_order_notifications":"","stockcheck_method":"","attach_packingslip":"0","hide_packingslip_amount":"-1","attach_shippinglabel":"0","notify_lowstock":"0","notify_lowstock_qty":"0","new_order_cc_emails":"","use_handling_fee":"0","handling_type":"F","handling_action":"O","allowed_countries":["*"],"limit_zipcode":"","url_key":"khn","initial_shipment_status":"999","vendor_po_grid_sortby":"order_increment_id","vendor_po_grid_sortdir":"asc","vendor_po_grid_status_filter":[],"logo":"registration\/16\/images.jpg","use_packingslip_custom_text":"-1","portal_show_totals":"-1","commission_percent":"0","transaction_fee":"0","apply_commission_on_discount":"999","apply_commission_on_tax":"999","apply_commission_on_shipping":"999","statement_discount_in_payout":"999","statement_tax_in_payout":"999","statement_shipping_in_payout":"999","shipping_tax_in_shipping":"999","statement_subtotal_base":"999","statement_po_type":"999","statement_po_status":["999"],"statement_shipment_status":["999"],"poll_tracking":"","label_type":"","dimension_units":"IN","default_pkg_length":"1","default_pkg_width":"1","default_pkg_height":"1","pdf_page_size":"612:792:","pdf_page_width":"8.5","pdf_page_height":"11","pdf_label_rotate":"0","pdf_label_left":".5","pdf_label_top":".5","epl_doctab":"0","ups_api_url":"https:\/\/wwwcie.ups.com\/ups.app\/xml\/","ups_shipper_number":"","ups_thirdparty_account_number":"","ups_thirdparty_country":"","ups_thirdparty_postcode":"","ups_insurance":"0","ups_delivery_confirmation":"","ups_verbal_confirmation":"0","ups_pickup":"","ups_container":"","ups_dest_type":"","ups_pdf_label_width":"4","ups_pdf_label_height":"7","endicia_api_url":"https:\/\/elstestserver.endicia.com\/LabelService\/EwsLabelService.asmx","endicia_test_mode":"0","endicia_requester_id":"","endicia_account_id":"","endicia_pass_phrase":"","endicia_new_pass_phrase":"","endicia_new_pass_phrase_confirm":"","endicia_label_type":"Default","endicia_mail_class":"FirstClassMailInternational","endicia_mailpiece_shape":"Card","endicia_stealth":"1","endicia_delivery_confirmation":"0","endicia_signature_confirmation":"0","endicia_return_receipt":"0","endicia_electronic_return_receipt":"0","endicia_insured_mail":"OFF","endicia_restricted_delivery":"0","endicia_cod":"0","endicia_balance_threshold":"","endicia_recredit_amount":"","endicia_pdf_label_width":"4","endicia_pdf_label_height":"6","fedex_test_mode":"1","fedex_user_key":"","fedex_user_password":"","fedex_account_number":"","fedex_meter_number":"","fedex_smartpost_hubid":"","fedex_payment_type":"SENDER","fedex_dry_ice_weight":"","fedex_dropoff_type":"REGULAR_PICKUP","fedex_label_stock_type":"PAPER_4X6","fedex_pdf_label_width":"4","fedex_pdf_label_height":"6","fedex_signature_option":"NO_SIGNATURE_REQUIRED","fedex_insurance":"0","fedex_notify_on":[""],"fedex_notify_email":"","fedex_itn":"","password_hash":"3bac078c73fe32b5e75a3a91d6e29f9d:Yt","vendor_name":"peeyush","telephone":"","email":"peeyush.khandelwal13@gmail.com","password":"WNJSTW","carrier_code":"fedex","vendor_attn":"test maker","city":"jaipur","zip":"30201","country_id":"UG","billing_use_shipping":"1","subdomain_level":"0","update_store_base_url":"-1","landing_page_title":"","landing_meta_keywords":"","landing_meta_description":"","show_products_menu_item":"-1","limit_websites":[""],"is_limit_categories":"1","limit_categories":"","google_analytics_enable":"0","google_analytics_account_id":"","cms_landing_page":"-1","description":"none","tiercom_fallback_lookup":"-1","is_custom_udprod_unpublish_actions":"0","udprod_unpublish_actions":[],"is_custom_udprod_allowed_types":"1","udprod_allowed_types":["*all*"],"is_udprod_manage_stock":"1","udprod_manage_stock":"1","is_udprod_backorders":"0","udprod_backorders":"0","is_udprod_min_qty":"0","udprod_min_qty":"0","is_udprod_min_sale_qty":"0","udprod_min_sale_qty":"1","is_udprod_max_sale_qty":"0","udprod_max_sale_qty":"10000","vendor_rma_grid_sortby":"increment_id","vendor_rma_grid_sortdir":"asc","rma_use_fedex_account":"vendor","rma_use_endicia_account":"vendor","rma_use_ups_account":"vendor"}
+      
+      
+   $array = json_decode($value, true);
+    echo $vendor_shopname=$array['vendor_shop_field'];
+    echo '<br/>';
+    echo $vendor_shop_images_field=$array['vendor_shop_images_field'];
+    echo '<br/>';
+*/
+//var_dump(json_decode($value));
+   
+if(isset($_FILES['images_shop'])){
+    
+   $image123456=$_FILES['images_shop']['name'];
+  
+            $tmp_name=$_FILES['images']['tmp_name'];
+             $path= move_uploaded_file($_FILES['images_shop']['tmp_name'],"media/vendor/".$vendor_id."/".$image123456);
+      $data_query=mysql_query("SELECT * FROM udropship_vendor WHERE vendor_id='$vendor_id'") ; 
+$data_R=mysql_fetch_array($data_query);
+ $test=$data_R['vendor_name'];
+  $value=$data_R['custom_vars_combined']; 
+  $array = json_decode($value, true);
+  $vendor_shopname=$array['vendor_shop_field'];
+   $vendor_shop_images_field=$array['vendor_shop_images_field'];
+    $vendor_shop_logo=$array['logo'];
+    $venndorurl_key=$array['url_key'];
+  
+$valueinsert='{"vendor_shop_field":"'.$vendor_shopname.'","vendor_shop_images_field":"vendor\/'.$vendor_id.'\/'.$image123456.'","url_key":"'.$venndorurl_key.'","logo":"'.$vendor_shop_logo.'"}';
+    
+   $main_q="UPDATE udropship_vendor SET custom_vars_combined='$valueinsert' WHERE vendor_id='$vendor_id'";
+    
+    
+    $query=mysql_query($main_q);
+
+if($query){
+    
+  $_SESSION['message']="Edit has been saved";
+}else{
+   $_SESSION['message']="Edit has been saved";
+}
+ }
+ 
+ 
+  
+if(isset($_FILES['images_vendor'])){
+    
+   $images_vendor=$_FILES['images_vendor']['name'];
+  
+            $tmp_name=$_FILES['images']['tmp_name'];
+             $path= move_uploaded_file($_FILES['images_vendor']['tmp_name'],"media/vendor/".$vendor_id."/".$images_vendor);
+      $data_query=mysql_query("SELECT * FROM udropship_vendor WHERE vendor_id='$vendor_id'") ; 
+$data_R=mysql_fetch_array($data_query);
+ $test=$data_R['vendor_name'];
+  $value=$data_R['custom_vars_combined']; 
+  $array = json_decode($value, true);
+  $vendor_shopname=$array['vendor_shop_field'];
+   $vendor_shop_images_field=$array['vendor_shop_images_field'];
+    $vendor_shop_logo=$array['logo'];
+    $venndorurl_key=$array['url_key'];
+  
+$valueinsert='{"vendor_shop_field":"'.$vendor_shopname.'","vendor_shop_images_field":"'.$vendor_shop_images_field.'","url_key":"'.$venndorurl_key.'","logo":"vendor\/'.$vendor_id.'\/'.$images_vendor.'"}';
+    
+   $main_q="UPDATE udropship_vendor SET custom_vars_combined='$valueinsert' WHERE vendor_id='$vendor_id'";
+    
+    
+    $query=mysql_query($main_q);
+
+if($query){
+    
+  $_SESSION['message']="Edit has been saved";
+}else{
+   $_SESSION['message']="Edit has been saved";
+}
+ }
+
+
+
+
+  $collection = Mage::getModel('catalog/product')->getCollection();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+//  print_r($vendor_data);
+?>
+ <?php
+ 
+  
+ //print_r($vendor_data);
+    $namevendor = $vendor_data->getVendorName();        
+// echo $namevendor; 
+ $namevendorshop = $vendor_data->getvendor_shop_field();      
+ $address_vendor =  $vendor_data->getBillingAddress();
+ 
+ $vendor_street=$vendor_data->getstreet();
+
+$vendor_streets = implode(" ", $vendor_street);
+ 
+
+//print_r($vendor_street);
+
+   $city_vendor=$vendor_data->getcity();
+  $zip=$vendor_data->getzip();
+
+
+$Attention= $vendor_data->getvendor_attn(); 
+ 
+  $logo= $vendor_data->getlogo();
+  $vendor_shop_images_field= $vendor_data->getvendor_shop_images_field();
+ 
+  $Announcement=$vendor_data->getAnnouncement();
+  
+  
+  $created_at = date("Y", Mage::getModel("core/date")->timestamp($vendor_data->getCreatedAt()));
+ ?> 
+ 
+ <?
+  
+  
+    
+    $i=0;
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id);
+   // print_r($_product);
+
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){
+     
+ 
+
+if($_id)
+{
+$wishlist = Mage::getModel('wishlist/item')->getCollection()->addFieldToFilter('product_id',$_id);
+
+if(count($wishlist)) {
+   $wishlistIds = $wishlist->getColumnValues('wishlist_id');
+      
+  // echo $wishlistIds;
+   // print_r($wishlistIds);
+    }
+
+$_product=Mage::getModel('catalog/product')->load($_id);
+
+//$wishListItemCollection = $wishlist->getItemCollection();
+foreach ($wishlist as $item)
+ {
+  $i++;
+ 
+ }  } } endforeach;
+ 
+ 
+ ?>
+ 
+ <?php
+        // review 
+         $a=0;
+         $p = 0;
+         foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+           $prod=Mage::getModel('catalog/product')->load($_id);
+           
+        //$prod=Mage::getSingleton('catalog/product')->load($_id);
+        //print_r($prod);
+        
+         $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+         if($vendor_id12==$vendor_id){
+             $p++;
+          
+           // $_product=Mage::getModel('catalog/product')->load($_id);
+         
+        $productId = $prod->getId();
+        $reviews = Mage::getModel('review/review') 
+                    ->getResourceCollection()
+                    ->addStoreFilter(Mage::app()->getStore()->getId())
+                    ->addEntityFilter('product', $productId)
+                    ->addStatusFilter(Mage_Review_Model_Review::STATUS_APPROVED)
+                    ->setDateOrder()
+                    ->addRateVotes();
+        
+               if (count($reviews) > 0) {
+                      foreach($reviews AS $review)
+                 {
+                     $a++;
+                    $votes = $review->getRatingVotes();
+                    $total = 0;
+                    foreach($votes AS $vote)
+                    {
+                        $total += $vote->getPercent();
+                    }
+                    $avg = $total / count($votes);
+                     $avg123+= $total;
+                   
+                   $total_review_avg = $avg123/$a;       
+                              
+                             }} } endforeach; 
+         
+ ?>  
+ 
+ 
+  <?php
+  // sales total
+     $sales_total=0;
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id); 
+    $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+     if($vendor_id12==$vendor_id){
+         
+          $name = $_product->getName();
+          
+          $product = Mage::getResourceModel('reports/product_collection')
+                    ->addOrderedQty()
+                    ->addAttributeToFilter('entity_id', array('eq' => $_id))
+                    ->setOrder('ordered_qty', 'desc')
+                    ->getFirstItem();
+                    if($product->ordered_qty)
+                    {
+                         // echo $product->ordered_qty.' '.$name.' <br/>';
+                          $sales_total +=$product->ordered_qty;
+                    }
+    
+                       
+         
+         
+         
+         
+           } endforeach 
+  ?>
+
+ <div><?=$value456645654564?></div>
+   <div><p style="color: green;text-align: center;"><?=$_SESSION['message'];  unset($_SESSION['message']); 
+    ?></p></div>      
+  <section class="full_layout_section gray-bg show_top_deatil_section">
+                <div class="container">
+                    <div class="row">
+                         <div class="col-md-10 col-xs-12 col-sm-9 shop_top_deatail_box">
+                                <div class="media" style="overflow: visible;">
+                                        <div class="media-left">
+                                                 <div class="thumbnail shop_top_logo_box relative">
+                                                 <?php if($vendor_shop_images_field){?>
+                                                  <img src="<?php echo Mage::getBaseUrl('media').$vendor_shop_images_field ?>" class="shop_logo_img" alt="shop-logo"/>
+                                                 <?php }else {
+                                                    
+                                                 ?>
+                                                 
+                                                  <img src="<?php echo Mage::getBaseUrl('media')?>icon/shop_dummy.png" class="shop_logo_img" alt="shop-logo"/>
+                                                 <?php }?>
+                                                  <a href="javascript:;" class="icon_img_upload_camera_icon shop_profile_img_update_btn" title="Change logo"><span class="glyphicon glyphicon-camera"  aria-hidden="true"></span></a>
+                                                </div>
+                                        
+                                        </div>
+                                        <div class="media-body shop_common_deatla_box">
+                                             
+                                                    <h2 class="shop_name"><?php echo $namevendorshop ?> </h2> 
+                                                    <p class="shop_tagline"><?php echo $Attention; ?> <span class="edit-box-icon" data-target="#title_edit_modal" data-toggle="modal">Edit <i class="glyphicon glyphicon-pencil"></i></span></p>
+                                                    
+                                                    <ul class="shop_link_row">
+                                                            <li><?php echo $address_vendor ?>  <span class="edit-box-icon" data-target="#shop_location_edit_modal" data-toggle="modal">Edit <i class="glyphicon glyphicon-pencil"></i></span></li>
+                                                            <li> <?=$sales_total?> Sales </li>
+                                                            <li>On BINGABINGA since <? echo $created_at?></li> 
+                                                             
+                                                    </ul>
+                                                    <div class="clearfix"></div>
+                                                    <!--<div class="rating_show_box pull-left">                                                                                         
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 1"></i>                                                                                                                   
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 2"></i>                                                                                                                   
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 3"></i>                                                                                                                   
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 4"></i>                                                                                                                   
+                                                                       <i class="fa fa-star rating_star_option fill_rating" title="Star 5"></i>
+                                                                       <span class="show_total_review_text">( )</span> 
+                                                    </div> -->
+                                                    <div class="ratings_img_box pull-left"><div class="rating-box"><div class="rating" style="width:<?php echo $total_review_avg; ?>%"></div></div> <span class="show_total_review_text">( <?php echo $a;?> )</span></div>
+                                                    <div class="clearfix"></div>
+                                                    <div class="shop_btn_row">                                                      
+                                                        <a href="http://bingabinga.net/udropship/vendor/favorites-items" class="favourite_show_btn"><i class="fa fa-heart-o"></i> Favorite shop ( <?php echo $i; ?> )</a>
+                                                          <a href="http://bingabinga.net/udropship/vendor/shop" class="custom_default_btn">View shop</a>
+                                                    </div>
+                                             
+                                        
+                                        </div>                                            
+                                </div>
+                            
+                         </div>
+                         <div class="col-md-2 col-xs-12 col-sm-3 shop_top_owner_deatail_box">
+                            <h3 class="shop_owner_heading">SHOP OWNER </h3> 
+                               <div class="shop_top_owner_logo relative" title="<?php echo $namevendor ?>">
+                                   <?php if($logo){ ?>
+                                  <img src="<?php echo Mage::getBaseUrl('media').$logo ?>" class="owner_logo_img img-circle " alt="owner-logo"/>    
+                                  <?php } else {?>
+                                   <img src="<?php echo Mage::getBaseUrl('media') ?>icon/user_dummy_icon.png" class="owner_logo_img img-circle " alt="owner-logo"/>    
+                                  <?php }?>
+                                  <a href="javascript:;" class="icon_img_upload_camera_icon vendor_profile_img_update_btn" title="Change logo"><span class="glyphicon glyphicon-camera" aria-hidden="true"></span></a>                              
+                               
+                                </div>
+                                <div class="clearfix"></div>
+                                <a class="shop_top_owner_name link_shop_top_owner" href="<?php echo $this->getUrl('udropship/vendor/preferences')?>"><?php echo $namevendor ?> </a>
+                                <div class="clearfix"></div>
+                                  
+                                 <ul class="shop_top_owner_social_row">
+                                        <li><a href="" class="social_btn_owner"><img src="<?php echo Mage::getBaseUrl('media').'social/red_fb_icon.png' ?>" /></a></li>
+                                        <li><a href="" class="social_btn_owner"><img src="<?php echo Mage::getBaseUrl('media').'social/red_tw_icon.png' ?>" /></a></li>
+                                         <li><a href="" class="social_btn_owner"><img src="<?php echo Mage::getBaseUrl('media').'social/red_instagram_icon.png' ?>" /></a></li>
+                                        <li><a href="" class="social_btn_owner"><img src="<?php echo Mage::getBaseUrl('media').'social/red_pintrest_icon.png' ?>" /></a></li>
+                                 </ul>
+                                 
+                                  
+                         </div>
+                    </div>
+                </div>
+
+        </section> 
+        
+        <div class="clearfix"></div>
+        
+          <section class="full_layout_section gray-bg">
+                                  <div class="container">
+                                    <div class="row">
+                                         <div class="col-md-12 col-xs-12 col-sm-12">
+                                                <table class="table shop_announcement_table">
+                                                        <tr>
+                                                            <th>Announcement</th>
+                                                            <td><?=$Announcement;?> <br /> <span class="edit-box-icon" data-target="#announcement_edit_modal" data-toggle="modal">Edit <i class="glyphicon glyphicon-pencil"></i></span></td>
+                                                        </tr>
+                                                
+                                                </table>
+                                         </div>  <!--end shop_announcement_table -->
+                                            <div class="col-xs-12 shop_layout_tab">
+                                                 <!-- Nav tabs -->
+                                                      <ul class="nav nav-tabs" role="tablist">
+                                                        <li role="presentation" class="active"><a href="#shop_item_tab" aria-controls="shop_item_tab" role="tab" data-toggle="tab">Items ( <?php echo $p; ?> ) </a></li>
+                                                        <li role="presentation"><a href="#shop_review_tab" aria-controls="shop_review_tab" role="tab" data-toggle="tab">Reviews</a></li>
+                                                        <li role="presentation"><a href="#shop_about_tab" aria-controls="shop_about_tab" role="tab" data-toggle="tab">About</a></li>
+                                                        <li role="presentation"><a href="#shop_policies_tab" aria-controls="shop_policies_tab" role="tab" data-toggle="tab">Policies</a></li>
+                                                      </ul>
+
+                                         </div>
+                                         
+                                         
+                                    </div><!--end row-->
+                                  </div><!--end container-->
+                    </section><!--end section-->
+                   
+                   
+
+          
+  
+  
+ 
+  
+    
+    
+ <!-- Modal title_edit_modal-->
+<div class="modal fade custom-modal" id="title_edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+   
+   <form action="<?php echo $this->getUrl('udropship/vendor/editshop')?>" method="post" id="">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title" id="myModalLabel">Shop title</h4>
+      </div>
+      <div class="modal-body padding_30modal">
+               <div class="max_length_apply_box"><textarea name="vendor_attn"class="form-control apply_maxlength m_b5" maxlength="55" rows="3"><?php echo $Attention; ?> </textarea></div>
+                
+      </div>
+      <div class="modal-footer">        
+        <button type="submit" name="shop_attn"class="save_btn m_right15">Save changes</button>
+        <button type="button" class="white_btn" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    </form>
+    
+  </div>
+</div>
+
+
+<!-- Modal shop_location_edit_modal-->
+<div class="modal fade custom-modal" id="shop_location_edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+  <form action="<?php echo $this->getUrl('udropship/vendor/editshop')?>" method="post" id="">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title" id="myModalLabel">Shop location</h4>
+      </div>
+      <div class="modal-body padding_30modal">
+                <label>Start typing and choose from a suggested city to help others find you.</label>
+               <input type="text" name="street" placeholder="Street"class="form-control" value="<?php echo $vendor_streets ?>"/>
+               <input type="text" name="city"placeholder="City"class="form-control" value="<?php echo $city_vendor ?>"/> 
+               <input type="text" name="zip"placeholder="Zip" class="form-control" value="<?php echo $zip ?>"/>  
+                
+      </div>
+      <div class="modal-footer">        
+        <button type="submit" name="address_submit"class="save_btn m_right15">Save changes</button>
+        <button type="button" class="white_btn" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal announcement_edit_modal-->
+<div class="modal fade custom-modal" id="announcement_edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+  <form method="post">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title" id="myModalLabel">Announcement</h4>
+      </div>
+      <div class="modal-body padding_30modal">
+               <textarea class="form-control" name="announcement_name"rows="4"><?=$Announcement;?></textarea>
+                
+      </div>
+      <div class="modal-footer">        
+        <button type="submit" name="announcement_submit"class="save_btn m_right15">Save changes</button>
+        <button type="button" class="white_btn" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+
+
+ <form id="vendor_profile_img_update_from" action="" method="POST" enctype="multipart/form-data" style="display: none;">
+ <input  type="file" id="vendor_profile_img_choose_btn" name="images_vendor"/>
+ <button type="submit"name="images_submit">Click</button>
+ </form>
+ <!-- Shop IMAGE EDIT FORM-->
+  <form id="shop_profile_img_update_from" action="" method="POST" enctype="multipart/form-data" style="display: none;">
+ <input  type="file" id="shop_profile_img_choose_btn" name="images_shop"/>
+ <button type="submit"name="images_submit_shop">Click</button>
+ </form>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+   
+   jQuery('.max_length_apply_box .apply_maxlength').each(function(){
+     var get_maxlength = jQuery(this).attr('maxlength'); 
+      var get_currentlength = jQuery(this).val().length;    
+        jQuery(this).after('<div class="show_charecter_number_max_length"><span class="show_current_length">'+get_currentlength+'</span> / '+get_maxlength+'</div>');          
+          // keyup
+          jQuery(this).keyup(function(){
+            get_currentlength = jQuery(this).val().length;        
+            jQuery(this).siblings('.show_charecter_number_max_length').children('.show_current_length').text(get_currentlength);                 
+                  if(get_currentlength >= get_maxlength) return false;
+          });
+   });
+   
+   //vendor_profile_img_update   
+   jQuery('.vendor_profile_img_update_btn').click(function(){
+          document.getElementById('vendor_profile_img_choose_btn').click();
+   });   
+    jQuery("input#vendor_profile_img_choose_btn").on("change", function()    {
+         var files = !!this.files ? this.files : [];         
+        if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support        
+        if (/^image/.test( files[0].type)){ // only image file
+             jQuery('form#vendor_profile_img_update_from').submit();
+        }        
+        else{
+            alert('Error! Unsupported image');
+        }
+      
+   });
+   
+   
+   //shop_profile_img_update   
+   jQuery('.shop_profile_img_update_btn').click(function(){
+          document.getElementById('shop_profile_img_choose_btn').click();
+   });   
+    jQuery("input#shop_profile_img_choose_btn").on("change", function()    {
+         var files = !!this.files ? this.files : [];         
+        if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support        
+        if (/^image/.test( files[0].type)){ // only image file
+             jQuery('form#shop_profile_img_update_from').submit();
+        }        
+        else{
+            alert('Error! Unsupported image');
+        }
+      
+   });
+    
+});
+
+</script>

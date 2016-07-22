@@ -1,0 +1,88 @@
+<?php
+
+$_session = Mage::getSingleton('udropship/session');
+  $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+$collection = Mage::getModel('catalog/product')->getCollection();
+
+$report = Mage::getResourceModel('report/product_sold_collection');
+
+foreach ($report AS $product) {
+    $product->getOrderedQty();
+    ?>
+    
+    <h1>total: <? echo $product->getOrderedQty();?><br /><? echo $product->getProductUrl();?></h1>
+    <?php
+    print_R($product->getData());
+    
+}
+
+?>
+  <?php
+      $collection = Mage::getModel('catalog/product')->getCollection();
+   
+    
+    
+     foreach ($collection as $_p): $_id = $_p->getEntityId() ;
+    $_product=Mage::getModel('catalog/product')->load($_id);
+   // print_r($_product);
+
+ $vendor_id12 = Mage::helper('udropship')->getVendor($_p)->getData('vendor_id');
+ if($vendor_id12==$vendor_id){
+     
+      $name = $_product->getName();
+      
+      $product = Mage::getResourceModel('reports/product_collection')
+                ->addOrderedQty()
+                ->addAttributeToFilter('entity_id', array('eq' => $_id))
+                ->setOrder('ordered_qty', 'desc')
+                ->getFirstItem();
+                if($product->ordered_qty)
+                {
+                      echo $product->ordered_qty.' '.$name.' <br/>';
+                      $sales_total +=$product->ordered_qty;
+                }
+
+                   
+     
+     
+     
+     
+       } endforeach ?>
+
+<?=$sales_total?>
+
+
+
+
+
+fgfgfgfgfgrfgfgf
+
+
+
+
+
+
+
+
+<?php    
+   /**
+ *   foreach(Mage::getModel('catalog/product')->getCollection() as $product)
+ *      {
+ *             $productId= $product->getId();
+ *             $productModel = Mage::getModel('catalog/product');
+ *             $name = $productModel->load($productId)->getName();
+ *             echo "<br/>";
+ *             $product = Mage::getResourceModel('reports/product_collection')
+ *                 ->addOrderedQty()
+ *                 ->addAttributeToFilter('entity_id', array('eq' => $productId))
+ *                 ->setOrder('ordered_qty', 'desc')
+ *                 ->getFirstItem();
+ *             echo (int)$product->ordered_qty.'&nbsp'.$name.' Have Been Sold';
+ *         }
+ */
+?> 
+
+ 
+<h1>Deepak sharma</h1>
+

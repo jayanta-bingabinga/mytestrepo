@@ -1,0 +1,64 @@
+<?php
+$routeName = $this->getRequest()->getRouteName();
+$controllerName = $this->getRequest()->getControllerName();
+$actionName = $this->getRequest()->getActionName();
+$cmsPageUrlKey = Mage::getSingleton('cms/page')->getIdentifier();
+?>
+<div style="display:none"><?php echo $routeName." = ".$controllerName." = ".$actionName; ?></div>
+<aside class="sidebar_box_data">
+  <div class="sidebar_box_data_inner quick_sidebar">
+    <h5 class="b heding_quick_sidebar"><?php echo $this->__("Quick links");?></h5>
+    <ul class="sidebar_link_pages m_bottom15">
+      <li><a href="<?php echo $this->getUrl('udropship/vendor/dashboard/')?>"><?php echo $this->__("Dashboard");?></a></li>
+      <li class=""><a href=""><?php echo $this->__("Stats");?></a></li>
+    </ul>
+    <div class="clearfix"></div>
+    <div class="quick_sidebar_border_box">&nbsp;</div>
+    <h5 class="b heding_quick_sidebar"><?php echo $this->__("Listings");?></h5>
+    <ul class="sidebar_link_pages">
+      <li><a href="<?php echo $this->getUrl('udropship/vendor/product/')?>"><?php echo $this->__("Listings Manager");?></a></li>
+      <li><a href="<?php echo $this->getUrl('udprod/vendor/products/')?>"><?php echo $this->__("Add a listing");?></a></li>
+      <li><a href=""><?php echo $this->__("Shipping Profiles");?></a></li>
+    </ul>
+    <div class="clearfix"></div>
+    <div class="quick_sidebar_border_box">&nbsp;</div>
+    <h5 class="b heding_quick_sidebar"><?php echo $this->__("Orders");?></h5>
+    <ul class="sidebar_link_pages">
+      <li <?php if($routeName == "udpo" && $controllerName == "vendor" && $actionName == "index"):?> class="active" <?php endif;?>><a href="<?php echo $this->getUrl('udpo/vendor')?>"><?php echo $this->__("Orders");?></a></li>
+      <li <?php if($routeName == "urma" && $controllerName == "vendor" && $actionName == "index"):?> class="active" <?php endif;?>><a href="<?php echo $this->getUrl('urma/vendor')?>"><?php echo $this->__("Returns");?></a></li>
+      <li <?php if($routeName == "cms" && $cmsPageUrlKey == "udropship/vendor/items-review"):?> class="active" <?php endif;?>><a href="<?php echo $this->getUrl('udropship/vendor/items-review')?>"><?php echo $this->__("Reviews");?></a></li>
+      <li><a href="<?php echo $this->getUrl('udqa/vendor/questions')?>"><?php echo Mage::helper('udropship')->__('Customer Questions')?></a></li>
+    </ul>
+    <div class="clearfix"></div>
+    <div class="quick_sidebar_border_box">&nbsp;</div>
+    <h5 class="b heding_quick_sidebar"><?php echo $this->__("Promote");?></h5>
+    <ul class="sidebar_link_pages">
+      <li><a href="<?php echo $this->getUrl('udpromo/vendor/rules');?>"><?php echo $this->__("Coupon codes");?></a></li>
+    </ul>
+    <div class="clearfix"></div>
+    <div class="quick_sidebar_border_box">&nbsp;</div>
+    <h5 class="b heding_quick_sidebar"><?php echo $this->__("Finances");?></h5>
+    <ul class="sidebar_link_pages">
+      <li <?php if($routeName == "udpayout" && $controllerName == "bill" && $actionName == "index"):?> class="active" <?php endif;?>><a href="<?php echo $this->getUrl('udpayout/bill');?>"><?php echo $this->__("Your bill");?></a></li>
+      <li><a href=""><?php echo $this->__("Payment Setting");?></a></li>
+      <li><a href=""><?php echo $this->__("History Payments");?></a></li>
+    </ul>
+    <div class="clearfix"></div>
+    <div class="quick_sidebar_border_box">&nbsp;</div>
+    <h5 class="b heding_quick_sidebar"><?php echo $this->__("Shoppings settings");?></h5>
+    <ul class="sidebar_link_pages">
+      <li><a href=""><?php echo $this->__("Info and appearance");?></a></li>
+      <li><a href="<?php echo $this->getUrl('udropship/vendor/shop/')?>"><?php echo $this->__("About your shop");?></a></li>
+    </ul>
+    <div class="clearfix"></div>
+    <div class="quick_sidebar_border_box">&nbsp;</div>
+    <h5 class="b heding_quick_sidebar"><?php echo $this->__("Education and support");?></h5>
+    <ul class="sidebar_link_pages">
+      <li><a href=""><?php echo $this->__("Steps to success");?></a></li>
+      <li><a href=""><?php echo $this->__("Seller Handbook");?></a></li>
+      <li><a href=""><?php echo $this->__("Seller protection");?></a></li>
+      <li><a href=""><?php echo $this->__("BINGABINGA help");?></a></li>
+    </ul>
+  </div>
+</aside>
+<!--end sidebar-->

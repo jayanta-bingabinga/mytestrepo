@@ -1,0 +1,271 @@
+ <?php
+$_session = Mage::getSingleton('udropship/session');
+
+  $collection = Mage::getModel('catalog/product')->getCollection();
+  
+  $vendor_id=$_session->getVendor()->getId();
+  $vendor_data = Mage::getModel('udropship/vendor')->load($vendor_id);
+  
+  
+  //print_r($vendor_data);
+  
+  $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+  
+  if(isset($_REQUEST['submit_policies'])){
+    
+    $policies_country=$_REQUEST['policies_country'];
+    
+    $policies_countrys = implode(',' , $policies_country);
+   
+    
+ 
+    
+        
+    $policies_to_day=$_REQUEST['policies_to_day'];  
+     $policies_to_days = implode(',' , $policies_to_day);
+    
+     $policies_form_day=$_REQUEST['policies_form_day'];  
+     $policies_form_days = implode(',' , $policies_form_day);
+    
+    
+    $shop_add_estimated_shipping_time=$_REQUEST['shop_add_estimated_shipping_time'];
+    $count=count($shop_add_estimated_shipping_time);
+  // echo   $shop_add_estimated_shipping_times = implode(',' , $shop_add_estimated_shipping_time);
+   for ($row = 0; $row < $count; $row++) {
+   $shop_add_estimated_shipping_times123[] = implode(',' , $shop_add_estimated_shipping_time[$row]);
+  
+}
+      $shop_add_estimated_ = implode(',' , $shop_add_estimated_shipping_times123);
+ 
+    
+    $Returns=$_REQUEST['Returns'];
+    $Exchanges=$_REQUEST['Exchanges'];
+    $Cancellations=$_REQUEST['Cancellations'];
+    
+    $policies_accept_term=$Returns.",".$Exchanges.",".$Cancellations;
+    
+    
+    $policies_contact_me_within=$_REQUEST['policies_contact_me_within'];
+    $policies_items_back_to_me_within=$_REQUEST['policies_items_back_to_me_within'];
+    
+    
+    $policies_item_category=$_REQUEST['policies_item_category'];
+     $policies_item_categoryss = implode(',' , $policies_item_category);
+    
+    
+    
+    $communicate=$_REQUEST['communicate'];
+    $fulfill=$_REQUEST['fulfill'];
+    $reasons=$_REQUEST['reasons'];
+    $Other=$_REQUEST['Other'];
+       $policies_privacy_policy=$communicate.",".$fulfill.",".$reasons.",".$Other;
+   $dates=date("d M,Y");
+   
+    
+  $query=mysql_query("UPDATE udropship_vendor SET policies_country='$policies_countrys',policies_to_day='$policies_to_days',policies_form_day='$policies_form_days',policies_type_day='$shop_add_estimated_',policies_accept_term='$policies_accept_term',policies_contact_me_within='$policies_contact_me_within',policies_items_back_to_me_within='$policies_items_back_to_me_within',policies_item_category='$policies_item_categoryss',policies_privacy_policy='$policies_privacy_policy',policies_update_date='$dates' WHERE vendor_id='$vendor_id'");
+
+if($query){
+    
+   $_SESSION['message']="Edit has been saved";
+  header("Location:".$currentUrl."");
+ }else{
+   $_SESSION['message']="Do not saved";
+ }
+ }
+
+ $policies_country = $vendor_data->getpolicies_country();
+ 
+ $pieces = explode(",", $policies_country);
+ $counts=count($pieces);
+ 
+ $policies_to_day = $vendor_data->getpolicies_to_day();
+  $policies_to_dayss= explode(",", $policies_to_day);
+
+$policies_form_day = $vendor_data->getpolicies_form_day();
+
+  $policies_form_days= explode(",", $policies_form_day);
+  
+  $policies_type_day= $vendor_data->getpolicies_type_day();
+  
+  $policies_accept_term= $vendor_data->getpolicies_accept_term();
+  $policies_accept_terms= explode(",", $policies_accept_term);
+  
+  $policies_contact_me_within= $vendor_data->getpolicies_contact_me_within();
+   $policies_items_back_to_me_within= $vendor_data->getpolicies_items_back_to_me_within();
+   
+   $policies_item_category= $vendor_data->getpolicies_item_category();
+   $policies_item_categorys= explode(",", $policies_item_category);
+  $policies_item_categorysAA=count($policies_item_categorys);
+  
+  
+    $policies_privacy_policy= $vendor_data->getpolicies_privacy_policy();
+  
+   $policies_privacy_policysSS= explode(",", $policies_privacy_policy);
+   
+  // print_r($policies_privacy_policysSS);
+  $policies_update_date= $vendor_data->getpolicies_update_date();
+   
+  
+  
+  
+  ?>
+  <form method="post">
+  <div class="shop_policies_edit_box m_bottom40 letter_spacing0_3">
+    <div class="col-md-3 col-sm-3 col-xs-12">
+        <h3 class="shop_layout_tab_heading b">Shop policies</h3>
+    </div> 
+    
+    <div class="col-md-9 col-sm-9 col-xs-12">
+                <div class="color_666 row_police_edit_inner">Last updated on <?=$policies_update_date?></div>      
+    </div><!--end Shop policies-->
+            
+    <div class="clearfix"></div>
+    
+    <div class="col-md-3 col-sm-3 col-xs-12">
+        <h4 class="shop_layout_tab_heading b m_top15">Payment options</h4>
+    </div> 
+    
+    <div class="col-md-9 col-sm-9 col-xs-12">
+                <div class="row_police_edit_inner">
+                        <p><strong>Secure options</strong></p>
+                         <img src="<?php echo Mage::getBaseUrl('media').'icon/accepted_payment_icon.jpg' ?>" class="img-responsive m_bottom10" alt="img" />
+                         <div class="color_666">BINGABINGA keeps your payment information secure. BINGABINGA shops never receive your credit card information.</div>
+                        
+                </div>  
+                
+                
+                <div class="row_police_edit_inner">
+                        <p><strong>Processing time</strong></p>                         
+                         <div class="color_666 m_bottom20">The time I need to prepare an order for shipping varies. For details, see individual items.</div>
+                         
+                         <p class="color_999 m_0">Optional</p>
+                         <p><strong>Estimated shipping times</strong></p>
+                         <p class="color_666">I'll do my best to meet these shipping estimates, but can't guarantee them. Actual delivery time will depend on the shipping method you choose.</p>
+                         <p>Selling to Europe? Make sure to let buyers know when they can expect to receive their order.</p>
+                         
+                         <div id="shop_add_estimated_shipping_time_box" class="shop_add_estimated_shipping_time_box">
+                                  
+                                  
+                                  <!-- php div-->
+                                  <?php if($policies_country){
+                                      for ($row = 0; $row < $counts; $row++) {
+                                      
+                                  //$policies_form_days
+                                    ?>
+                                  
+                                  <div class="shop_add_estimated_shipping_time_row row" style="max-width: 500px;"><div class="col-md-5 col-sm-5 col-xs-12 form-group"><select name="policies_country[]" class="form-control"><option <?php if($pieces[$row]=="UK"){echo "selected";}?> >UK</option></select></div><div class="col-md-7 col-sm-7 col-xs-12 form-group"><table style="width: 100%;"><tbody><tr><td><select name="policies_to_day[]" class="form-control"><option <?php if($policies_to_dayss[$row]==1){echo "selected";}?>>1</option><option <?php if($policies_to_dayss[$row]==2){echo "selected";}?>>2</option><option <?php if($policies_to_dayss[$row]==3){echo "selected";}?>>3</option><option <?php if($policies_to_dayss[$row]==4){echo "selected";}?>>4</option><option <?php if($policies_to_dayss[$row]==5){echo "selected";}?>>5</option><option <?php if($policies_to_dayss[$row]==6){echo "selected";}?>>6</option><option <?php if($policies_to_dayss[$row]==7){echo "selected";}?>>7</option><option <?php if($policies_to_dayss[$row]==8){echo "selected";}?>>8</option><option <?php if($policies_to_dayss[$row]==9){echo "selected";}?>>9</option><option <?php if($policies_to_dayss[$row]==10){echo "selected";}?>>10</option></select></td><td style="text-align: center;width: 30px;vertical-align: middle;"> - </td><td><select name="policies_form_day[]" class="form-control"><option <?php if($policies_form_days[$row]==1){echo "selected";}?> >1</option><option <?php if($policies_form_days[$row]==2){echo "selected";}?>>2</option><option <?php if($policies_form_days[$row]==5){echo "selected";}?>>3</option><option <?php if($policies_form_days[$row]==4){echo "selected";}?>>4</option><option <?php if($policies_form_days[$row]==5){echo "selected";}?>>5</option><option  <?php if($policies_form_days[$row]==6){echo "selected";}?>>6</option><option <?php if($policies_form_days[$row]==7){echo "selected";}?>>7</option><option <?php if($policies_form_days[$row]==8){echo "selected";}?>>8</option><option <?php if($policies_form_days[$row]==9){echo "selected";}?>>9</option><option <?php if($policies_form_days[$row]==10){echo "selected";}?>>10</option></select></td><td style="width: 30px;text-align: right;vertical-align: middle;"><span class="fa fa-times color_666 btn_shop_delete_estimated_shipping_time" style="cursor:pointer"></span></td></tr></tbody></table></div> <div class="col-xs-12 col-sm-4  col-sm-offset-4"><div class="radio"><label><input type="radio" value="1"  <?php if($policies_type_day[$row]==1){ echo "checked"; }?> name="shop_add_estimated_shipping_time[0][]"> Business days</label></div><div class="radio"><label><input value="2" <?php if($policies_type_day[$row]==1){ echo "checked"; }?> type="radio" name="shop_add_estimated_shipping_time[0][]"> Weeks</label></div></div></div>
+                                  <?php }} ?>
+                                  
+                                  <!--  php div stop -->
+                                  
+                                  
+                                    
+                                    
+                                    
+                                    
+                                    
+                                                    
+                                <a href="javascript:;" class="btn_shop_add_estimated_shipping_time"><i class="glyphicon glyphicon-plus-sign"></i> Add estimated shipping time</a>
+                         
+                         </div>
+                         
+                         <p><strong>Customs and import taxes</strong></p>
+                         <p>Buyers are responsible for any customs and import taxes that may apply. I'm not responsible for delays due to customs.</p>
+                        
+                </div>      
+    </div> <!--end Payment options-->
+     <div class="clearfix"></div>
+        
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <h4 class="shop_layout_tab_heading b m_top15">Returns & exchanges</h4>
+        </div> 
+    
+      <div class="col-md-9 col-sm-9 col-xs-12">
+            <div class="row_police_edit_inner">
+                        <p><strong>I accept the following</strong></p>
+                        
+                        <div class="checkbox"><label><input  <?php if($policies_accept_terms[0]=="Returns"){ echo "checked";} ?> name="Returns"value="Returns" type="checkbox" /> Returns</label></div>
+                        <div class="checkbox"><label><input <?php if($policies_accept_terms[1]=="Exchanges"){ echo "checked";}?> name="Exchanges"value="Exchanges" type="checkbox" /> Exchanges</label></div>
+                        <div class="checkbox"><label><input <?php if($policies_accept_terms[2]=="Cancellations"){ echo "checked";}?>  name="Cancellations" value="Cancellations" type="checkbox" /> Cancellations</label></div>
+                        
+                        
+                        <table class="table">
+                                <tr>
+                                        <td style="width: 150px;vertical-align: middle;border: 0px;padding-left: 0px;">Just contact me within: </td>
+                                        <td style="vertical-align: middle;border: 0px;"><select name="policies_contact_me_within"class="form-control pull-left m_right10" style="width: 100px;"><option <?php if($policies_contact_me_within==1){echo "selected";} ?>>1</option><option <?php if($policies_contact_me_within==2){echo "selected";} ?>>2</option><option <?php if($policies_contact_me_within==3){echo "selected";} ?>>3</option><option <?php if($policies_contact_me_within==4){echo "selected";} ?>>4</option><option <?php if($policies_contact_me_within==5){echo "selected";} ?>>5</option><option <?php if($policies_contact_me_within==6){echo "selected";} ?>>6</option><option <?php if($policies_contact_me_within==7){echo "selected";} ?>>7</option><option <?php if($policies_contact_me_within==8){echo "selected";} ?>>8</option><option <?php if($policies_contact_me_within==9){echo "selected";} ?>>9</option><option<?php if($policies_contact_me_within==10){echo "selected";} ?>>10</option></select> <span>days of delivery</span></td>
+                                </tr>                                
+                                <tr>
+                                        <td style="width: 150px;vertical-align: middle;border: 0px;padding-left: 0px">Ship items back to me within: </td>
+                                        <td style="vertical-align: middle;border: 0px;"><select name="policies_items_back_to_me_within"class="form-control pull-left m_right10" style="width: 100px;"><option <?php if($policies_items_back_to_me_within==1){echo "selected";} ?>>1</option><option <?php if($policies_items_back_to_me_within==2){echo "selected";} ?>>2</option><option <?php if($policies_items_back_to_me_within==3){echo "selected";} ?>>3</option><option <?php if($policies_items_back_to_me_within==4){echo "selected";} ?>>4</option><option <?php if($policies_items_back_to_me_within==5){echo "selected";} ?>>5</option><option <?php if($policies_items_back_to_me_within==6){echo "selected";} ?>>6</option><option <?php if($policies_items_back_to_me_within==7){echo "selected";} ?>>7</option><option <?php if($policies_items_back_to_me_within==8){echo "selected";} ?>>8</option><option <?php if($policies_items_back_to_me_within==9){echo "selected";} ?>>9</option><option<?php if($policies_items_back_to_me_within==10){echo "selected";} ?>>10</option></select> <span>days of delivery</span></td>
+                                </tr>                                 
+                        </table>
+                        
+                        
+                        <h4 class="m_bottom10">The following items can't be returned or exchanged</h4>
+                        <p class="font16 color_666">Because of the nature of these items, unless they arrive damaged or defective, I can't accept returns for:</p>
+                                <div id="shop_edit_box_return_exchange_box" class="shop_edit_box_return_exchange_box m_bottom20 m_top15">
+                                                
+                                                <ul class="shop_edit_box_return_exchange_item_show">                                                     
+                                                <?php if($policies_item_categorys){
+                                                    for ($row = 0; $row < $policies_item_categorysAA; $row++) {
+                                       
+                                                    
+                                                    ?>
+                                                 <li class="item_returned"><?=$policies_item_categorys[$row];?><span class="fa fa-times btn_remove_shop_edit_box_return_exchange_item" title="Remove item"></span> <input type="hidden" name="policies_item_category[]" id="" value="<?=$policies_item_categorys[$row];?>" class="policies_item_categorys"></li>
+                                                
+                                                <?php } }?>
+                                                </ul>
+                                                <div class="clearfix"></div>
+                                                <select class="form-control shop_edit_box_return_exchange_select font16" style="max-width: 300px;">
+                                                    <option>Select an item category</option>
+                                                   
+                                                   <?php $_helper = Mage::helper('catalog/category') ?>
+    <?php $_categories = $_helper->getStoreCategories();
+    
+    foreach($_categories as $_category): ?>
+    
+                     <?php $_category = Mage::getModel('catalog/category')->load($_category->getId());
+                     ?>
+                    
+                    <option><?=$_category->getName();?></option>
+                  
+  
+     <?php endforeach; ?>
+                                                </select>
+                                         
+                                </div>
+                        
+                          <strong>Conditions of return</strong>
+                          <p>Buyers are responsible for return shipping costs. If the item is not returned en its original condition, the buyer is responsible gor any loss in value.</p>       
+                                
+                        
+            </div>
+      </div> <!--end Returns & exchanges-->
+      <div class="clearfix"></div>
+      
+      <div class="col-md-3 col-sm-3 col-xs-12">
+            <h4 class="shop_layout_tab_heading b m_top15">Privacy policy</h4>
+        </div> 
+    
+      <div class="col-md-9 col-sm-9 col-xs-12">
+            
+                        <h4>I will only use your shipping and billing address, and contact information</h4>
+                        
+                        <div class="checkbox"><label><input name="communicate" <?php if($policies_privacy_policysSS[0]==1){ echo "checked";}?>  value="1"type="checkbox" /> To communicate with you about your order</label></div>
+                        <div class="checkbox"><label><input name="fulfill" <?php if($policies_privacy_policysSS[1]==2){ echo "checked";}?>  value="2"type="checkbox" /> To fulfill your order</label></div>
+                        <div class="checkbox"><label><input name="reasons" <?php if($policies_privacy_policysSS[2]==3){ echo "checked";}?>  value="3"type="checkbox" /> For legal reasons (like paying taxes)</label></div>
+                        <div class="checkbox"><label><input  name="Other" <?php if($policies_privacy_policysSS[3]==4){ echo "checked";}?>  value="4"type="checkbox" /> Other</label></div>
+                        <div class="clearfix"></div>
+                        <div class="form-group m_top20">
+                                <button type="submit" name="submit_policies" class="save_btn m_right15 pull-left">Publish Shop Policies</button>
+                                <button type="button" class="btn custom_default_btn">Cancel</button>
+                                
+                        </div>
+            
+      </div>
+            
+     <!--end Returns & exchanges-->
+     <div class="clearfix"></div>
+</div>
+</form>
+ 
